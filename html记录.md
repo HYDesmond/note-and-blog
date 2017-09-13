@@ -45,7 +45,7 @@
 + `<input />`设置提交按钮，type设置为submit是才有提交作用，value为按钮上显示的文字
 + `<input />`设置重置按钮，重置表单的默认值，type设置为reset，value为按钮上显示的文字
 + `<texttarea></texttarea>`文本域标签，cols属性输入域列数，rows输入域行数，标签之间可以输入默认值
-+ `<select><option></option></select>`下拉列表控件，`<select>`设置multiple=“multiple”属性为多选。`<option>`代表选项，value属性为提交值，标签中间为显示内容，设置slected=“selected”属性为默认选项
++ `<select><option></option></select>`下拉列表控件，`<select>`设置multiple=“multiple”属性为多选。`<option>`代表选项，value属性为提交值，标签中间为显示内容，设置selected=“selected”属性为默认选项
 + `<label></label>`标签简单的来说将文字和表单的选项绑定达到点击文字同样可以选择的效果。for属性要和选项的id属性相同
 #CSS样式
 css 样式由选择符和声明组成，而声明又由属性和值组成，如下图所示：
