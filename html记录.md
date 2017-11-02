@@ -99,7 +99,7 @@ css在html中的使用分为内联，嵌入，外部三种
 + `text-decoration:underline;` 下划线
 + `text-decoration:line-through;` 删除线
 + `text-indent:2em;` 缩进
-+ `line-height:1.5em;` 行间距
++ `line-height:1.5em;` 行间距/行高
 + `letter-spacing:50px;` 字间距
 + `text-align:center/left/right;` 居中/左/右
 ## 元素
@@ -108,6 +108,7 @@ css在html中的使用分为内联，嵌入，外部三种
 + `display:block` 设置为块级元素
 + `display:inline` 设置为内联（行）元素
 + `display:inline-block` 设置为内联块状标签
++ `opacity:0.5`  不透明度
 ## 盒子模型
 + `border` 边框
     + `-style`样式`dashed虚线`、`dotted（点线）`、`solid（实线）`
@@ -126,3 +127,14 @@ css在html中的使用分为内联，嵌入，外部三种
 + `position:fixed` 固定定位，将元素固定与相对于网页显示大小的位置除非改变网页大小或浏览器位置才会移动位置（常见的右下角小广告）
     + 使用`left`、`right`、`top`、`bottom`属性设置偏移量
 
+##清除浮动的几种方法
+```
+<div class="clear"></div>
+.clear{
+    clear:both;
+}
+
+
+或者父元素设置
+overflow: auto;
+```
