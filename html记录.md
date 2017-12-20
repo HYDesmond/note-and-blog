@@ -120,6 +120,7 @@ css在html中的使用分为内联，嵌入，外部三种
     + `-top`、`-bootom`、`-right`、`-left` 单独设置上下左右边框
     + 如果四周填充宽度相同可以`div{padding:10px;}`
     + 如果上下填充一样为10px，左右一样为20px，可以这么写：`div{padding:10px 20px;}`
+    + 还有三个的写法，分别代表上 左右 下  比如：`div{padding:10px 20px 30px;}`,就是代表上面`10px`,下面`30px`，左右都是`20px`
 + `margin` 边界，用法与`padding` 相同
 + `float` 浮动模型可以让块元素浮动到同一行 `left`和`rigth`两个属性
 + `position: absolute;` 绝对定位，相对于最接近的一个具有定位属性的父包含块进行绝对定位，如果不存在父元素则相对于浏览器窗口
