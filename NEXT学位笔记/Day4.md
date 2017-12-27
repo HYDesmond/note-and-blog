@@ -151,9 +151,92 @@ x和y的值支持百分比，不过这个百分比是对于自身来说了，参
 |forwards|当动画完成后，保持最后一个属性值（在最后一个关键帧中定义），即在动画完成后，保持最后一个状态，不再变回原来的状态|
 |backwards|在 `animation-delay` 所指定的一段时间内，在动画显示之前，应用开始属性值（在第一个关键帧中定义）。|
 |both|`forwards`和`backwards`两种模式都被应用。|
++ `:nth-child(n)` 这是一个在动画中经常用到的伪选择器，中间的n替换为正整数，意思是选中其父元素的第几个子元素，通过这个可以方便的设置各个小组件的延时达到流畅动画的效果。
++ 
+### 小玩意
+最后在介绍一个函数`steps()`，这个函数是一个`timing-function（速度曲线）`的值，与之前不同的是，前面的都是设置为平滑过渡，而这个函数是一个阶跃函数，可以设置为分段过渡，用这个可以完成很多很有意思的效果。
++ `steps()`有两个参数
++ 第一个参数指定动画分为多少段完成
++ 第二个参数有两个值`start`和`end`，指定在每段的起点还是终点发生变化。默认值为`end` 
 
+可以看这个学习`steps`的用法：https://segmentfault.com/a/1190000007042048
+
+下面是两个很有意思的Demo，时钟Demo来自[这里](https://designmodo.com/demo/stepscss/pawprints.html)，打字Demo来自阮一峰博客
+
+![](http://www.xluos.com/usr/uploads/2017/12/1985179436.png)
+
+![css4.gif](http://www.xluos.com/usr/uploads/2017/12/3351138871.gif)
 # Day3直播课内容
+如果说直播课上还是懵逼，那么现在对这些动画就很清楚那些属性到底是怎么回事儿了。直播课上要求每个人都写一个自己的,现在就很容易写出来一个简单的loading了，[Demo]()效果图如下：
 
+![css5.gif](http://www.xluos.com/usr/uploads/2017/12/2507239177.gif)
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>loading</title>
+    <style>
+    body {
+        background-color: #ddd
+    }
+    /* 设置大盒子水平垂直居中 */
+    .box {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%,-50%);
+    }
+    /* 设置球球动画 */
+    @keyframes qiuqiu {
+        0% {
+            top:-25px;
+        }
+        100% {
+            top:25px;
+        }
+    }
+    /* 设置球的属性 */
+    .qiu {
+        position: relative;
+        top: -25px;
+        float: left;
+        margin: 10px;
+        height: 40px;
+        width: 40px;
+        border-radius: 50%;
+        background-color: #4285f4;
+        animation: qiuqiu .4s ease-in-out infinite alternate;
+    }
+    /* 分别为后面的小球设置颜色和延时 */
+    .qiu:nth-child(2) {
+        animation-delay: 0.1s;
+        background-color: #0f9d58;
+    }
+    .qiu:nth-child(3) {
+        animation-delay: 0.2s;
+        background-color: #f4b400;
+    }
+    .qiu:nth-child(4) {
+        animation-delay: 0.3s;
+        background-color: #db4437;
+    }
+
+    </style>
+</head>
+<body>
+    <div class="box">
+        <div class="qiu"></div>
+        <div class="qiu"></div>
+        <div class="qiu"></div>
+        <div class="qiu"></div>
+    </div>
+</body>
+</html>
+```
 # Day4课程补充知识（非常多）
 + [软谋教育 CSS动画](https://ke.qq.com/webcourse/index.html#course_id=20945&term_id=100003219&taid=638975169548753&vid=t1410nxa13p)
 + [什么是响应式布局设计？](https://www.zhihu.com/question/20976405)
@@ -186,7 +269,7 @@ x和y的值支持百分比，不过这个百分比是对于自身来说了，参
 
 + [w3school CSS3 学习资料](http://www.w3school.com.cn/css3/)
 # Day4总结
-
+动画这一点儿的东西挺多的，只是靠上课那点儿东西自己不自己查的话，作为新手是很难搞清楚的，在一个就是如果之前用过其他软件（比如AE）做过小动画的话，这一点儿理解起来就很容易了，chrome的调试工具中还可以直接拉贝塞尔曲线实时看到效果很赞。
 # Day4干货分享
 2017前端框架及进阶知识汇总
  http://www.jianshu.com/p/302f14643c69 
