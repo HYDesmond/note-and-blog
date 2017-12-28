@@ -44,10 +44,19 @@
 + removeChild() 删除元素节点注释节点
     + 语法：`node.removeChild(node)` **第一个node是删除节点的父节点**
     + 返回值：删除的节点
-+ removeNamedItem() 删除属性
++ removeNamedItem() 和removeAttribute() 删除属性
     + 语法：`namednodemap.removeNamedItem(nodename)`
+    + `element.removeAttribute(attributename)`
     ![](http://www.xluos.com/usr/uploads/2017/12/3024108033.png)
     + `attributes 属性`：返回指定节点属性的集合。
+    + `removeAttribute()`更方便
++ 如何选择一个节点的子节点
+    + 使用`childNodes`属性，会返回一个子节点集合（这个属性包含空白字符，空白字符为一个`text`节点）
+    + 使用`children`属性，获得一个不包含空白字符的集合
+    + 使用`firstElementChild`属性，获得第一个节点（不含空白字符）
+    + 使用`firstChild`属性，获得第一个节点（含空白字符）
+    + 使用`listElementChild`属性，获得最后一个节点（不含空白字符）
+    + 使用`listChild`属性，获得最后一个节点（含空白字符）
 + DocumentFragment
     + 这是一个游离在DOM树之外的代码片段，如果要插入大量节点时（循环插入），频繁的操作DOM树会导致频繁渲染页面卡顿，所以可以使用这种方法来加速，现将插入的操作添加进`DocumentFragment` 中，然后将`DocumentFragment`一次性插入DOM树。
     + 下面是示例
