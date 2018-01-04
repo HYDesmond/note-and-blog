@@ -83,7 +83,7 @@
     ```
 推荐 [菜鸟教程](http://www.runoob.com/jsref/dom-obj-document.html) 和 [W3School](http://www.w3school.com.cn/jsref/dom_obj_document.asp)
 
-点击查看[demo]()
+点击查看[demo](https://xluos.github.io/demo/NEXT%E5%AD%A6%E4%BD%8DDemo/DocumentFragment%E5%8A%A0%E9%80%9F%E5%AE%9E%E9%AA%8C.html)
 ## 事件
 事件无处不在，用户的所有操作都是时间，鼠标的滑动、点击、按下、弹起，窗口改变、按键、滑动等等等都是时间
 

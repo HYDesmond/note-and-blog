@@ -1,0 +1,1745 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: "Segoe WPC", "Segoe UI", "SFUIText-Light", "HelveticaNeue-Light", sans-serif, "Droid Sans Fallback";
+	font-size: 14px;
+	padding: 0 12px;
+	line-height: 22px;
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	color: #4080D0;
+	text-decoration: none;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+h1 code,
+h2 code,
+h3 code,
+h4 code,
+h5 code,
+h6 code {
+	font-size: inherit;
+	line-height: auto;
+}
+
+a:hover {
+	color: #4080D0;
+	text-decoration: underline;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left: 5px solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 14px;
+	line-height: 19px;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+.mac code {
+	font-size: 12px;
+	line-height: 18px;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+/** Theming */
+
+.vscode-light,
+.vscode-light pre code {
+	color: rgb(30, 30, 30);
+}
+
+.vscode-dark,
+.vscode-dark pre code {
+	color: #DDD;
+}
+
+.vscode-high-contrast,
+.vscode-high-contrast pre code {
+	color: white;
+}
+
+.vscode-light code {
+	color: #A31515;
+}
+
+.vscode-dark code {
+	color: #D7BA7D;
+}
+
+.vscode-light pre:not(.hljs),
+.vscode-light code > div {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre:not(.hljs),
+.vscode-dark code > div {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre:not(.hljs),
+.vscode-high-contrast code > div {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+.vscode-light blockquote,
+.vscode-dark blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.vscode-high-contrast blockquote {
+	background: transparent;
+	border-color: #fff;
+}
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #A31515;
+	font-size: inherit;
+	font-family: inherit;
+}
+
+</style>
+
+</head>
+<body>
+<h1>笔记前言</h1>
+<p>前端学了并没有多长时间，一直都没有系统的学习过。百度的ife没有赶上，都是看着任务自己写也没有小伙伴交流什么的比较遗憾，这次正好赶上了腾讯NEXT的课程，感觉又可以认识一大帮大佬了，也算是系统的入门一下前端吧。听说每天还有大批干货赠送，希望最后可以拿到公仔☺</p>
+<p>另外厚颜无耻的附上<a href="http://www.xluos.com">博客</a>和<a href="https://github.com/xluos">GitHub</a></p>
+<ul>
+<li><a href="https://github.com/xluos/note-and-blog/tree/master/NEXT%E5%AD%A6%E4%BD%8D%E7%AC%94%E8%AE%B0">笔记源文件</a></li>
+<li><a href="https://github.com/xluos/demo/tree/gh-pages">项目源文件</a></li>
+</ul>
+<p>不要吝啬你的Star（撒花）</p>
+<h1>目录</h1>
+<ul>
+<li><a href="#%E7%AC%94%E8%AE%B0%E5%89%8D%E8%A8%80">笔记前言</a></li>
+<li><a href="#%E7%9B%AE%E5%BD%95">目录</a></li>
+<li><a href="#day1%E7%9B%B4%E6%92%AD%E5%86%85%E5%AE%B9">Day1直播内容</a></li>
+<li><a href="#day1%E8%AF%BE%E7%A8%8B%E5%86%85%E5%AE%B9">Day1课程内容</a></li>
+<li><a href="#day1%E6%80%BB%E7%BB%93">Day1总结</a></li>
+<li><a href="#day2%E8%AF%BE%E7%A8%8B%E5%86%85%E5%AE%B9">Day2课程内容</a></li>
+<li><a href="#day2%E8%AF%BE%E7%A8%8B%E8%A1%A5%E5%85%85%E7%9F%A5%E8%AF%86">Day2课程补充知识</a></li>
+<li><a href="#day2%E6%80%BB%E7%BB%93">Day2总结</a></li>
+<li><a href="#day2%E5%B9%B2%E8%B4%A7%E5%88%86%E4%BA%AB">Day2干货分享</a></li>
+<li><a href="#day3%E8%AF%BE%E7%A8%8B%E5%86%85%E5%AE%B9">Day3课程内容</a></li>
+<li><a href="#day%E8%AF%BE%E7%A8%8B%E8%A1%A5%E5%85%85%E7%9F%A5%E8%AF%86">Day课程补充知识</a></li>
+<li><a href="#day3%E7%9B%B4%E6%92%AD%E5%86%85%E5%AE%B9">Day3直播内容</a></li>
+<li><a href="#day3%E6%80%BB%E7%BB%93">Day3总结</a></li>
+<li><a href="#day3%E5%B9%B2%E8%B4%A7%E5%88%86%E4%BA%AB">Day3干货分享</a></li>
+<li><a href="#day4%E8%AF%BE%E7%A8%8B%E5%86%85%E5%AE%B9">Day4课程内容</a>
+<ul>
+<li><a href="#tranistion-%E5%8A%A8%E7%94%BB%E5%92%8Canimation-%E5%8A%A8%E7%94%BB%E7%AE%80%E4%BB%8B"><code>tranistion 动画</code>和<code>animation 动画</code>简介</a></li>
+<li><a href="#tranistion-%E5%8A%A8%E7%94%BB">tranistion 动画</a>
+<ul>
+<li><a href="#%E5%8F%82%E6%95%B0">参数</a></li>
+<li><a href="#dome">Dome</a></li>
+</ul>
+</li>
+<li><a href="#animation-%E5%8A%A8%E7%94%BB">animation 动画</a>
+<ul>
+<li><a href="#%E5%AE%9A%E4%B9%89%E5%8A%A8%E7%94%BB%EF%BC%9Akeyframes-%E8%A7%84%E5%88%99">定义动画：<code>@keyframes 规则</code></a></li>
+<li><a href="#%E8%AF%AD%E6%B3%95">语法</a></li>
+<li><a href="#%E7%BB%99%E5%85%83%E7%B4%A0%E5%8A%A0%E5%85%A5%E5%8A%A8%E7%94%BB">给元素加入动画</a></li>
+<li><a href="#%E5%B0%8F%E7%8E%A9%E6%84%8F">小玩意</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#day3%E7%9B%B4%E6%92%AD%E8%AF%BE%E5%86%85%E5%AE%B9">Day3直播课内容</a></li>
+<li><a href="#day4%E8%AF%BE%E7%A8%8B%E8%A1%A5%E5%85%85%E7%9F%A5%E8%AF%86%EF%BC%88%E9%9D%9E%E5%B8%B8%E5%A4%9A%EF%BC%89">Day4课程补充知识（非常多）</a>
+<ul>
+<li><a href="#%E6%95%B4%E4%BD%93%E5%B8%83%E5%B1%80">整体布局</a></li>
+<li><a href="#%E5%86%85%E5%AE%B9%E5%A4%84%E7%90%86%E7%9B%B8%E5%85%B3">内容处理相关</a></li>
+<li><a href="#%E6%A1%86%E6%9E%B6%E7%9B%B8%E5%85%B3">框架相关</a></li>
+<li><a href="#%E5%B7%A5%E5%85%B7%E7%9B%B8%E5%85%B3">工具相关</a></li>
+<li><a href="#%E5%85%B6%E4%BB%96">其他</a></li>
+</ul>
+</li>
+<li><a href="#day4%E6%80%BB%E7%BB%93">Day4总结</a></li>
+<li><a href="#day4%E5%B9%B2%E8%B4%A7%E5%88%86%E4%BA%AB">Day4干货分享</a></li>
+<li><a href="#day5%E8%AF%BE%E7%A8%8B%E5%86%85%E5%AE%B9">Day5课程内容</a>
+<ul>
+<li><a href="#js%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86%EF%BC%88%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E4%B8%AD%EF%BC%89">js知识整理（持续更新中）</a></li>
+<li><a href="#%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%93%8D%E4%BD%9C">对象的操作</a></li>
+<li><a href="#%E5%87%BD%E6%95%B0">函数</a></li>
+<li><a href="#%E5%87%BD%E6%95%B0%E4%BD%9C%E7%94%A8%E5%9F%9F">函数作用域</a></li>
+<li><a href="#%E9%97%AD%E5%8C%85">闭包</a></li>
+</ul>
+</li>
+<li><a href="#day5%E8%AF%BE%E7%A8%8B%E8%A1%A5%E5%85%85%E7%9F%A5%E8%AF%86">Day5课程补充知识</a></li>
+<li><a href="#day5%E6%80%BB%E7%BB%93">Day5总结</a></li>
+<li><a href="#day5%E5%B9%B2%E8%B4%A7%E5%88%86%E4%BA%AB">Day5干货分享</a></li>
+<li><a href="#day6%E8%AF%BE%E7%A8%8B%E5%86%85%E5%AE%B9">Day6课程内容</a>
+<ul>
+<li><a href="#dom%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F">DOM是什么？</a></li>
+<li><a href="#dom%E6%93%8D%E4%BD%9C">DOM操作</a>
+<ul>
+<li><a href="#dom%E6%9F%A5%E6%89%BE">DOM查找</a></li>
+<li><a href="#dom%E6%96%B0%E5%A2%9E%E4%B8%8E%E5%88%A0%E9%99%A4">DOM新增与删除</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BA%8B%E4%BB%B6">事件</a>
+<ul>
+<li><a href="#%E4%BA%8B%E4%BB%B6%E6%A8%A1%E5%9E%8B">事件模型</a></li>
+<li><a href="#%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B%EF%BC%88%E4%BA%8B%E4%BB%B6%E5%8F%A5%E6%9F%84%EF%BC%89">事件类型（事件句柄）</a>
+<ul>
+<li><a href="#%E9%BC%A0%E6%A0%87%E7%B1%BB">鼠标类</a></li>
+<li><a href="#%E9%94%AE%E7%9B%98%E7%B1%BB">键盘类</a></li>
+<li><a href="#%E5%85%B6%E4%BB%96%E4%BA%8B%E4%BB%B6">其他事件</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BA%8B%E4%BB%B6%E7%BB%91%E5%AE%9A%E4%B8%8E%E8%A7%A3%E7%BB%91">事件绑定与解绑</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#day6%E8%AF%BE%E7%A8%8B%E8%A1%A5%E5%85%85%E7%9F%A5%E8%AF%86">Day6课程补充知识</a></li>
+<li><a href="#day6%E6%80%BB%E7%BB%93">Day6总结</a></li>
+<li><a href="#day6%E5%B9%B2%E8%B4%A7%E5%88%86%E4%BA%AB">Day6干货分享</a></li>
+<li><a href="#day7%E8%AF%BE%E7%A8%8B%E5%86%85%E5%AE%B9">Day7课程内容</a></li>
+<li><a href="#day7%E8%AF%BE%E7%A8%8B%E8%A1%A5%E5%85%85%E7%9F%A5%E8%AF%86">Day7课程补充知识</a></li>
+<li><a href="#day7%E6%80%BB%E7%BB%93">Day7总结</a></li>
+<li><a href="#day7%E5%B9%B2%E8%B4%A7%E5%88%86%E4%BA%AB">Day7干货分享</a></li>
+<li><a href="#day7%E8%AF%BE%E7%A8%8B%E5%86%85%E5%AE%B9">Day7课程内容</a></li>
+<li><a href="#day7%E8%AF%BE%E7%A8%8B%E8%A1%A5%E5%85%85%E7%9F%A5%E8%AF%86">Day7课程补充知识</a></li>
+<li><a href="#day7%E6%80%BB%E7%BB%93">Day7总结</a></li>
+<li><a href="#day7%E5%B9%B2%E8%B4%A7%E5%88%86%E4%BA%AB">Day7干货分享</a></li>
+<li><a href="#day9%E8%AF%BE%E7%A8%8B%E5%86%85%E5%AE%B9">Day9课程内容</a>
+<ul>
+<li><a href="#%E5%89%8D%E7%AB%AF%E5%B0%B1%E4%B8%9A%E5%B8%82%E5%9C%BA%E5%88%86%E6%9E%90">前端就业市场分析</a></li>
+<li><a href="#%E7%A7%AF%E7%B4%AF%E7%BB%8F%E9%AA%8C%E6%89%93%E9%80%A0%E7%A1%AC%E5%AE%9E%E5%8A%9B">积累经验打造硬实力</a></li>
+<li><a href="#%E5%88%B6%E4%BD%9C%E4%B8%80%E4%BB%BD%E5%A5%BD%E7%AE%80%E5%8E%86">制作一份好简历</a></li>
+<li><a href="#%E9%9D%A2%E8%AF%95%E5%AE%98%E5%A6%82%E4%BD%95%E5%87%BA%E9%A2%98">面试官如何出题</a>
+<ul>
+<li><a href="#%E4%B8%80%E3%80%81%E8%87%AA%E6%88%91%E4%BB%8B%E7%BB%8D">一、自我介绍</a></li>
+<li><a href="#%E4%BA%8C%E3%80%81%E6%8A%80%E6%9C%AF%E5%9F%BA%E7%A1%80%E6%98%AF%E5%90%A6%E6%89%8E%E5%AE%9E">二、技术基础是否扎实</a></li>
+<li><a href="#%E4%B8%89%E3%80%81%E6%98%AF%E5%90%A6%E5%85%B7%E6%9C%89%E7%A0%94%E7%A9%B6%E7%B2%BE%E7%A5%9E">三、是否具有研究精神</a></li>
+<li><a href="#%E5%9B%9B%E3%80%81%E6%B2%A1%E6%9C%89%E9%80%A0%E5%81%87">四、没有造假</a></li>
+<li><a href="#%E4%BA%94%E3%80%81%E6%B2%9F%E9%80%9A%E8%83%BD%E5%8A%9B%E6%B2%A1%E6%9C%89%E9%97%AE%E9%A2%98">五、沟通能力没有问题</a></li>
+<li><a href="#%E5%85%AD%E3%80%81%E5%85%B6%E4%BB%96%E5%A5%97%E8%B7%AF%E9%97%AE%E9%A2%98">六、其他套路问题</a></li>
+</ul>
+</li>
+<li><a href="#%E9%9D%A2%E8%AF%95%E5%B8%B8%E8%80%83%E7%82%B9">面试常考点</a></li>
+</ul>
+</li>
+<li><a href="#day9%E6%80%BB%E7%BB%93">Day9总结</a></li>
+<li><a href="#day9%E5%B9%B2%E8%B4%A7%E5%88%86%E4%BA%AB">Day9干货分享</a></li>
+<li><a href="#%E7%BB%93%E4%B8%9A%E6%84%9F%E6%83%B3">结业感想</a></li>
+</ul>
+<hr>
+<h1>Day1直播内容</h1>
+<p>开篇直播主要是一个开营仪式，助教和老师们的自我介绍，并且介绍了一下前端的一些东西，可以看出来真的是一个很入门的课程，完全0基础都可以来听都是很合适的。直播老师很厉害大三自学了前端就去面腾讯了（orz）。</p>
+<ul>
+<li>前端的本职工作——做网页</li>
+<li>现在还可以干更多——app（phoneGap、cordova）、桌面应用（Element）、服务端（node.js）、甚至是嵌入式都可以（在树莓派上使用<code>rpio</code>控制<code>gpio</code>来控制）</li>
+<li>前端是润滑剂——连接沟通各个部门</li>
+<li>三剑客（html，css，js）基本作用
+<ul>
+<li>html 骨架</li>
+<li>css 样式</li>
+<li>js 行为动作</li>
+</ul>
+</li>
+<li>chrome和编辑器的介绍</li>
+<li>本次课程项目展示</li>
+</ul>
+<h1>Day1课程内容</h1>
+<p>课程里面第一天主要就是讲了web的历史，算是一些了解性的内容，这里简要记录一下</p>
+<ul>
+<li>至今只发展了28年（1989-2017）</li>
+<li>web之父——Tim Berners-Lee<br>
+<img src="http://www.xluos.com/usr/uploads/2017/12/2282581880.png" alt="web之父"></li>
+<li>为了更好的共享科研数据，Tim Berners-Lee提出了整套web解决方案</li>
+<li>关键节点
+<ul>
+<li>1993年4月， CERN宣布任何人都可以使用 Web协议和代码免版税</li>
+<li>1994年10月，Tim Berners-Lee在MIT成立W3C定义了web标准</li>
+</ul>
+</li>
+<li>http协议</li>
+<li>js之父——Brendan Eich<br>
+<img src="http://www.xluos.com/usr/uploads/2017/12/3064832518.png" alt="js之父"></li>
+<li>css历史<br>
+<img src="http://www.xluos.com/usr/uploads/2017/12/1592346079.png" alt="css"></li>
+<li>2000年左右web工程师开始了细分后端、前端</li>
+<li>2005年Ajax的使用，前端工程师更加火了起来</li>
+<li>2009年左右，国内各大公司设立前端岗位</li>
+<li>....</li>
+</ul>
+<h1>Day1总结</h1>
+<p>第一天并没有讲技术上的东西，但是web历史还是有必要的，毕竟了解一下行业的历史了解各种技术因何而生，或许能理解到一些不一样的的东西。<br>
+课程最后一句话我很喜欢<strong>Keep learning</strong>，不止是前端，其他行业同样需要<strong>保持学习</strong><br>
+<img src="http://www.xluos.com/usr/uploads/2017/12/1357536157.png" alt="keep learning"></p>
+<h1>Day2课程内容</h1>
+<p>今天的比较基础，讲的是HTML的基础知识，因为之前接触过很快的过了一遍做了练习就完了。不得不说课程做的很不错，配图漂亮有趣。</p>
+<p>课程内容如下：</p>
+<ul>
+<li>HTML结构
+<ul>
+<li>文档声明——搞死浏览器需要用那个版本解析
+<ul>
+<li><code>HTML5</code>的文档声明为<code>&lt;!DOCTYPE html&gt;</code></li>
+<li><code>HTML4</code>的文档声明为<code>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.01//EN&quot; &quot;http://www.w3.org/TR/html4/strict.dtd&quot;&gt;</code></li>
+</ul>
+</li>
+<li><code>html</code>标签，所有元素都被它包裹，所以称为<strong>顶级元素/根元素</strong></li>
+<li><code>head</code>标签，元数据用来保存文档<strong>元数据</strong>，用来描述页面本身的信息，比如页面的标题、引用的样式等</li>
+<li><code>bady</code>标签，存放页面内容<br>
+<img src="http://www.xluos.com/usr/uploads/2017/12/987064857.png" alt="html"></li>
+</ul>
+</li>
+<li>嵌套元素
+<ul>
+<li>一个页面的所有标签都是相互嵌套而成，而这种相互嵌套使他们之间形成了联系，就是<strong>HTML树</strong><br>
+<img src="http://www.xluos.com/usr/uploads/2017/12/3017368627.png" alt="图像 011.png"></li>
+</ul>
+</li>
+<li>HTML树
+<ul>
+<li>HTML标签之间的互相嵌套就形成了一种特殊的结构，<strong>HTML树</strong><br>
+<img src="http://www.xluos.com/usr/uploads/2017/12/998385780.png" alt="图像 013.png"></li>
+<li>HTML树之间元素的关系<br>
+<img src="http://www.xluos.com/usr/uploads/2017/12/2412422358.png" alt="TIM截图20171219110649.png"></li>
+</ul>
+</li>
+<li>各种标签用法记录
+<ul>
+<li>https://github.com/xluos/note-and-blog/blob/master/html%E8%AE%B0%E5%BD%95.md</li>
+</ul>
+</li>
+</ul>
+<h1>Day2课程补充知识</h1>
+<ul>
+<li><a href="http://www.w3school.com.cn/html/html_elements.asp">w3school HTML 学习资料</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/22978846">你可以成为Web开发工程师！</a></li>
+<li><a href="https://dwqs.gitbooks.io/frontenddevhandbook/content/practice/salaries.html">Front-end Developer HandBook</a></li>
+</ul>
+<h1>Day2总结</h1>
+<p>课程很基础，适合0基础的学，有基础的可以快速过一遍。</p>
+<h1>Day2干货分享</h1>
+<p>下面来存一些群里发的干货，每天的干货都不是一天能看完了，所以每天留存慢慢消化</p>
+<ul>
+<li>
+<p>值得看的前端面试文章- 收藏集 - 掘金（合辑）http://www.jianshu.com/p/f1c380e45de3</p>
+</li>
+<li>
+<p>前端技术体系大局观 https://zhuanlan.zhihu.com/p/23185351</p>
+</li>
+<li>
+<p>从培训班出来之后找工作的经历，教会了我这五件事 https://juejin.im/post/5842c27c61ff4b006c2a55d7</p>
+</li>
+<li>
+<p>学习前端我推荐这5本书 https://juejin.im/post/582aa436128fe1006940f9ac</p>
+</li>
+</ul>
+<h1>Day3课程内容</h1>
+<p>第三天是基本的css内容，同样之前有基础很快就过了。</p>
+<ul>
+<li>css语法
+<ul>
+<li>css的语法如下图：多条声明语句之间由分号隔开<br>
+<img src="http://www.xluos.com/usr/uploads/2017/12/1892450823.png" alt="css语法"></li>
+</ul>
+</li>
+<li>如何引入css
+<ul>
+<li>内联式直接写在标签里面如果有多条样式代码用分号分开，如：<code>&lt;p style=&quot;color:red;font-size:12px&quot;&gt;这里文字是红色。&lt;/p&gt;</code></li>
+<li>嵌入式css样式必须写在<code>&lt;style type=&quot;text/css&quot;&gt;&lt;/style&gt;</code>之间，type属性样式表的 MIME 类型。目前，唯一可能的值是 &quot;text/css&quot;。通常<code>&lt;style&gt;&lt;/style&gt;</code>标签写在<code>&lt;head&gt;&lt;/head&gt;</code>之间</li>
+<li>外部式，把css样式写在一个单独的以.css结尾的文件中，使用<code>&lt;link&gt;</code>标签链接到HTML文件内(该标签一般也放在<code>&lt;head&gt;&lt;/head&gt;</code>之间)，用法：<code>&lt;link rel=&quot;stylesheet&quot; href=&quot;base.css&quot;&gt;</code>,<em>rel=&quot;stylesheet&quot; 是固定写法不可修改。</em></li>
+<li>在相同权值下，样式的选择分别为：内联&gt;嵌入&gt;外部，就近原则</li>
+</ul>
+</li>
+<li>css选择器
+<ul>
+<li><strong>元素选择器：</strong> 基本的选择器，可以选中html中的元素比如<code>&lt;p&gt;&lt;/p&gt;</code>,用法比如：<code>p {color:red;}</code></li>
+<li><strong>类选择器：</strong> 类样式的选择器可以自定义但是要以<code>.</code>开头，使用是在标签中加入属性class=“类名（不带点儿）”</li>
+<li><strong>ID选择器：</strong> 类似类选择器，只不过为标签设置id=&quot;ID名称&quot;，而不是class=&quot;类名称&quot;。ID选择符的前面是井号（#）号，而不是英文圆点（.）。<em>两者区别，类选择器可以使用多次，id选择器只能使用一次方便使用js通过id来获取属性调用</em></li>
+<li><strong>子选择器（.first&gt;span{color:red;}）与后代选择器(.first  span{color:red;})：</strong> 子选择器作用于元素的第一个后代，后代选择器则是全部后代</li>
+<li><em><em>通用选择器（</em> {。。。}）：</em>* 为所有标签加上样式</li>
+<li><strong>伪类选择符（标签：状态{样式}）：</strong> 可以为一个不存在的标签（比如某个标签的鼠标划过状态）设置样式</li>
+<li><strong>分组选择符:</strong> 为多个标签设置同一个样式时用<code>，</code>分割，如：<code>h1,span{color:red;}</code></li>
+</ul>
+</li>
+<li>css盒模型
+<ul>
+<li>
+<p>每一个元素都被当作是一个盒子，从内到外分别是<strong>内容区域</strong>也就是平时设定<code>width</code>和<code>height</code>区域、<strong>内填充（padding）</strong>、<strong>边框（border）</strong>、<strong>外边距（margin）</strong>。这四个区域加起来的大小才是元素页面真正占用的区域。</p>
+<p><img src="http://www.xluos.com/usr/uploads/2017/12/3484864675.png" alt="css盒子"></p>
+</li>
+<li>
+<p>对于<strong>行内元素</strong>高度的设置是无效的，<code>margin</code>的上下边距设置也是无效的</p>
+</li>
+<li>
+<p>浏览器一般都有默认的<code>margin</code>等样式，所以在自己设置样式时一般需要清除默认样式</p>
+</li>
+</ul>
+</li>
+<li><code>float</code>属性可以让块级元素摆脱独占一行的性质，像普通的文档流一样让块元素浮动到同一行，有<code>left</code>和<code>rigth</code>两个属性分别是向左浮动和向右浮动</li>
+<li><code>position</code>属性
+<ul>
+<li><code>position</code>代表定位，有三种属性分别是<code>absolute</code>绝对定位、<code>relative</code>相对定位、<code>fixed</code>固定定位</li>
+<li><code>absolute</code>，使元素脱离文档流，相对于最接近的一个具有定位属性的父元素进行绝对定位，如果不存在父元素则相对于浏览器窗口</li>
+<li><code>relative</code>，使用<code>relative</code>的时候文件并没有脱离本身的文档流，原来的位置还在占用着，这个属性的偏移量是相对于原来位置的</li>
+<li><code>fixed</code>，同样也脱离的文档流，位置是相对于浏览器窗口的固定不变</li>
+</ul>
+</li>
+<li>常用css属性记录
+<ul>
+<li>https://github.com/xluos/note-and-blog/blob/master/html%E8%AE%B0%E5%BD%95.md</li>
+</ul>
+</li>
+</ul>
+<h1>Day课程补充知识</h1>
+<ul>
+<li>
+<p><a href="http://www.w3school.com.cn/css/index.asp">w3school CSS资料</a></p>
+</li>
+<li>
+<p><a href="http://www.w3school.com.cn/cssref/pr_pos_z-index.asp">w3school CSS z-index属性</a></p>
+</li>
+<li>
+<p><a href="https://ke.qq.com/webcourse/index.html#course_id=192657&amp;term_id=100228265&amp;taid=1148547269587089&amp;vid=w1417nevzms">饥人谷-制作个人简历</a></p>
+</li>
+<li>
+<p><a href="https://ke.qq.com/webcourse/index.html#course_id=198306&amp;term_id=100235071&amp;taid=1252309384496802&amp;vid=y14003f1tqb">职坐标- CSS 定位于DIV布局</a></p>
+</li>
+<li>
+<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/Guide/CSS/Getting_started/Layout">MDN-CSS布局</a></p>
+</li>
+</ul>
+<h1>Day3直播内容</h1>
+<p>直播主要讲了用CSS3的动画制作自己的loading，但是Day3的直播是提前的，涉及到Day4的内容，所以这一块我决定等看完Day4以后，在Day4中详细的写。</p>
+<h1>Day3总结</h1>
+<p>css部分因为之前的基础很容易就过了，但是晚上的直播课因为涉及到比较多的<code>CSS3</code>的动画，之前这一块儿还没有接触，虽然看着很容易和用AE做动画差不多，但是具体的属性都不是很了解所以自己做就做不出来了，还是需要去看看那些属性的用法。</p>
+<h1>Day3干货分享</h1>
+<p>2017年最受欢迎的在线编程挑战网站<br>
+https://zhuanlan.zhihu.com/p/30164522</p>
+<p>为什么整个互联网行业都缺前端工程师<br>
+https://zhuanlan.zhihu.com/FrontendMagazine/20598089</p>
+<h1>Day4课程内容</h1>
+<p>Day4的课程<code>tranistion 动画</code>和<code>animation 动画</code>,课程内容讲的并不是很多，课程作业也预先写好了大部分代码，需要自己好好琢磨才能掌握。</p>
+<h2><code>tranistion 动画</code>和<code>animation 动画</code>简介</h2>
+<p><code>tranistion 动画</code>为补间动画，即我们只需要定义一个动画开始和结束的两个状态，浏览器就会计算出动画中间的自动帮我们做好展示。<br>
+<code>animation 动画</code>是帧动画的意思，意思是我们定义的<strong>不再是开始和结束</strong>两个状态了，而是<strong>根据动画原型来定义</strong>，我们动画原型分为几个阶段，就定义几个<strong>关键帧</strong>来表示状态，每个关键帧之间的动画由浏览器计算得出。<br>
+如下图就是两种最简单的动画：</p>
+<p><img src="http://www.xluos.com/usr/uploads/2017/12/2617119284.gif" alt="css1.gif"></p>
+<p><img src="http://www.xluos.com/usr/uploads/2017/12/2224219172.gif" alt="css2.gif"></p>
+<p>在我看来<code>tranistion 动画</code>是<code>animation 动画</code>的一种特殊形式，为了更容易书写或者渲染方便等原因所以单独分出来一个属性，应该说以一种简化的<code>animation</code></p>
+<p>这一节用到的一个新属性<code>transform</code>，这个属性是<code>CSS3</code>中的一个属性功能非常强大，<a href="http://www.w3school.com.cn/cssref/pr_transform.asp">W3C的定义</a>如下：</p>
+<blockquote>
+<p>transform 属性向元素应用 2D 或 3D 转换。该属性允许我们对元素进行旋转、缩放、移动或倾斜。</p>
+</blockquote>
+<p>由于属性太多了，这里只写我们用到一个方法<code>translate(x,y)</code>,根据给定的 <strong>left（x 坐标） 和 top（y 坐标）</strong> 位置参数，对元素进行移动。这是一个2D平移操作，<strong>不会使元素脱离文档流</strong>。<br>
+x和y的值支持百分比，不过这个百分比是对于自身来说了，参见下图：</p>
+<p><img src="http://www.xluos.com/usr/uploads/2017/12/3400714682.png" alt="图像 014.png"></p>
+<h2>tranistion 动画</h2>
+<p>补间动画或者说<strong>过渡</strong>更加贴切，毕竟官方就是这么称呼的。相对来说比较容易</p>
+<h3>参数</h3>
+<p><code>tranistion</code>是一个简写属性默认值为<code>all 0 ease 0</code>，这四个值分别代表下面四个属性。</p>
+<ul>
+<li>
+<p><code>transition-property: none|all|property;</code> 设置应用过渡效果的css属性名称</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">值</th>
+<th style="text-align:left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">none</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">all</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">property</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p><code>transition-duration: time;</code> 设置过渡完成的时间</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">值</th>
+<th style="text-align:left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">time</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p><code>transition-timing-function</code> 设置过渡效果的速度曲线</p>
+<ul>
+<li>语法<code>transition-timing-function: linear|ease|ease-in|ease-out|ease-in-out|cubic-bezier(n,n,n,n);</code></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">值</th>
+<th style="text-align:left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">linear</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">ease</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">ease-in</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">ease-out</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">ease-in-out</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">cubic-bezier(n,n,n,n)</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><code>cubic-bezier</code>函数实际上设置的是运动速率的<strong>贝塞尔曲线</strong>，在这个网站上可以实时设置并立马看到效果<a href="http://cubic-bezier.com/#.17,.67,.83,.67">CSS贝塞尔曲线可视化</a></li>
+</ul>
+</li>
+<li>
+<p><code>transition-delay: time;</code> 设置过渡开始的延迟时间</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">值</th>
+<th style="text-align:left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">time</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+<h3>Dome</h3>
+<p>在线查看:</p>
+<p>代码：</p>
+<pre class="hljs"><code><div><span class="hljs-meta">&lt;!DOCTYPE html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"en"</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"UTF-8"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"viewport"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"width=device-width, initial-scale=1.0"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">http-equiv</span>=<span class="hljs-string">"X-UA-Compatible"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"ie=edge"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Document<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">style</span>&gt;</span><span class="css">
+    <span class="hljs-selector-class">.window</span>{
+        <span class="hljs-attribute">position</span>: relative;
+        <span class="hljs-attribute">width</span>: <span class="hljs-number">500px</span>;
+        <span class="hljs-attribute">height</span>: <span class="hljs-number">200px</span>;
+        <span class="hljs-attribute">background-color</span>: aliceblue;
+        <span class="hljs-attribute">border</span>: darkgrey solid <span class="hljs-number">1px</span>;
+        <span class="hljs-attribute">margin</span>: <span class="hljs-number">0</span> auto;
+        <span class="hljs-comment">/* transition: all 1s; */</span>
+    }
+    <span class="hljs-selector-class">.qiu</span> {
+        <span class="hljs-attribute">position</span>: absolute;
+        <span class="hljs-attribute">top</span>: <span class="hljs-number">50px</span>;
+        <span class="hljs-attribute">transform</span>: <span class="hljs-built_in">translate</span>(0,50%);
+        <span class="hljs-attribute">height</span>: <span class="hljs-number">50px</span>;
+        <span class="hljs-attribute">width</span>: <span class="hljs-number">50px</span>;
+        <span class="hljs-attribute">border-radius</span>: <span class="hljs-number">50%</span>;
+        <span class="hljs-attribute">background-color</span>: aqua;
+        <span class="hljs-attribute">transition</span>: all <span class="hljs-number">1s</span>;
+    }
+    <span class="hljs-selector-class">.window</span><span class="hljs-selector-pseudo">:hover</span> <span class="hljs-selector-class">.qiu</span> {
+        <span class="hljs-attribute">transform</span>: <span class="hljs-built_in">translate</span>(450px,50%);
+        <span class="hljs-attribute">background-color</span>: aquamarine;
+    }
+    </span><span class="hljs-tag">&lt;/<span class="hljs-name">style</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">"text-align: center"</span>&gt;</span>鼠标放到方框查看动画<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"window"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"qiu"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span>
+
+</div></code></pre>
+<h2>animation 动画</h2>
+<h3>定义动画：<code>@keyframes 规则</code></h3>
+<blockquote>
+<p>通过 @keyframes 规则，您能够创建动画。<br>
+创建动画的原理是，将一套 CSS 样式逐渐变化为另一套样式。<br>
+在动画过程中，您能够多次改变这套 CSS 样式。<br>
+以百分比来规定改变发生的时间，或者通过关键词 &quot;from&quot; 和 &quot;to&quot;，等价于 0% 和 100%。<br>
+0% 是动画的开始时间，100% 动画的结束时间。<br>
+为了获得最佳的浏览器支持，您应该始终定义 0% 和 100% 选择器。<br>
+注释：请使用动画属性来控制动画的外观，同时将动画与选择器绑定。</p>
+</blockquote>
+<h3>语法</h3>
+<ul>
+<li>
+<p><code>@keyframes animationname {keyframes-selector {css-styles;}}</code></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">值</th>
+<th style="text-align:left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left"><code>animationname</code></td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left"><code>keyframes-selector</code></td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left"><code>css-styles</code></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p><code>keyframes-selector</code>可以有很多个，值可以不按顺序写（在chrome测试），比如先写0%和100%的状态，再写25%和50%的状态，但是在可读性上来说还是按顺序写跟利于维护。</p>
+</li>
+</ul>
+<h3>给元素加入动画</h3>
+<p>语法：<code>animation: name duration timing-function delay iteration-count direction fill-mode play-state;</code></p>
+<p>默认值为<code>none 0 ease 0 1 normal</code></p>
+<p>看着很乱东西很多，这是简写的六个属性，他们分别是下面这些（部分属性和上面的<code>transition</code>相同细节不重复写）</p>
+<ul>
+<li>
+<p><code>animation-name: keyframename|none;</code>为 @keyframes 动画规定名称。 设置为<code>none</code>可以覆盖级联的动画效果</p>
+</li>
+<li>
+<p><code>animation-duration: time;</code> 设置动画时间，默认为0（无动画）</p>
+</li>
+<li>
+<p><code>animation-timing-function: value;</code> 设置动画速度曲线，参数和前面的一样，默认是<code>ease(慢快慢)</code></p>
+</li>
+<li>
+<p><code>animation-delay: time;</code> 动画开始前的延时</p>
+</li>
+<li>
+<p><code>animation-iteration-count: n|infinite;</code> 动画播放的次数</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">值</th>
+<th style="text-align:left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">n</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">infinite</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p><code>animation-direction: normal|alternate;</code>  定义是否要轮流反向播放动画，见下图</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">值</th>
+<th style="text-align:left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">normal</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">alternate</td>
+</tr>
+</tbody>
+</table>
+<p><img src="http://www.xluos.com/usr/uploads/2017/12/525904668.gif" alt="css3.gif"></p>
+</li>
+<li>
+<p><code>animation-play-state: paused|running</code> 规定动画正在运行还是暂停。（PS：您可以在 JavaScript 中使用该属性，这样就能在播放过程中暂停动画。）</p>
+</li>
+<li>
+<p><code>animation-fill-mode : none | forwards | backwards | both;</code></p>
+</li>
+</ul>
+<blockquote>
+<p>animation-fill-mode 属性规定当动画不播放时（当动画完成时，或当动画有一个延迟未开始播放时），要应用到元素的样式。默认情况下，CSS 动画在第一个关键帧播放完之前不会影响元素，在最后一个关键帧完成后停止影响元素。animation-fill-mode 属性可重写该行为。</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">值</th>
+<th style="text-align:left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">none</td>
+<td style="text-align:left">不改变默认行为。</td>
+</tr>
+<tr>
+<td style="text-align:left">forwards</td>
+<td style="text-align:left">当动画完成后，保持最后一个属性值（在最后一个关键帧中定义），即在动画完成后，保持最后一个状态，不再变回原来的状态</td>
+</tr>
+<tr>
+<td style="text-align:left">backwards</td>
+<td style="text-align:left">在 <code>animation-delay</code> 所指定的一段时间内，在动画显示之前，应用开始属性值（在第一个关键帧中定义）。</td>
+</tr>
+<tr>
+<td style="text-align:left">both</td>
+<td style="text-align:left"><code>forwards</code>和<code>backwards</code>两种模式都被应用。</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><code>:nth-child(n)</code> 这是一个在动画中经常用到的伪选择器，中间的n替换为正整数，意思是选中其父元素的第几个子元素，通过这个可以方便的设置各个小组件的延时达到流畅动画的效果。</li>
+<li></li>
+</ul>
+<h3>小玩意</h3>
+<p>最后在介绍一个函数<code>steps()</code>，这个函数是一个<code>timing-function（速度曲线）</code>的值，与之前不同的是，前面的都是设置为平滑过渡，而这个函数是一个阶跃函数，可以设置为分段过渡，用这个可以完成很多很有意思的效果。</p>
+<ul>
+<li><code>steps()</code>有两个参数</li>
+<li>第一个参数指定动画分为多少段完成</li>
+<li>第二个参数有两个值<code>start</code>和<code>end</code>，指定在每段的起点还是终点发生变化。默认值为<code>end</code></li>
+</ul>
+<p>可以看这个学习<code>steps</code>的用法：https://segmentfault.com/a/1190000007042048</p>
+<p>下面是两个很有意思的Demo，时钟Demo来自<a href="https://designmodo.com/demo/stepscss/pawprints.html">这里</a>，打字Demo来自阮一峰博客</p>
+<p><img src="http://www.xluos.com/usr/uploads/2017/12/1985179436.png" alt=""></p>
+<p><img src="http://www.xluos.com/usr/uploads/2017/12/3351138871.gif" alt="css4.gif"></p>
+<h1>Day3直播课内容</h1>
+<p>如果说直播课上还是懵逼，那么现在对这些动画就很清楚那些属性到底是怎么回事儿了。直播课上要求每个人都写一个自己的,现在就很容易写出来一个简单的loading了，<a href="https://xluos.github.io/demo/NEXT%E5%AD%A6%E4%BD%8DDemo/loading.html">Demo</a>效果图如下：</p>
+<p><img src="http://www.xluos.com/usr/uploads/2017/12/2507239177.gif" alt="css5.gif"></p>
+<pre class="hljs"><code><div><span class="hljs-meta">&lt;!DOCTYPE html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"en"</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"UTF-8"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"viewport"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"width=device-width, initial-scale=1.0"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">http-equiv</span>=<span class="hljs-string">"X-UA-Compatible"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"ie=edge"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>loading<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">style</span>&gt;</span><span class="css">
+    <span class="hljs-selector-tag">body</span> {
+        <span class="hljs-attribute">background-color</span>: <span class="hljs-number">#ddd</span>
+    }
+    <span class="hljs-comment">/* 设置大盒子水平垂直居中 */</span>
+    <span class="hljs-selector-class">.box</span> {
+        <span class="hljs-attribute">position</span>: absolute;
+        <span class="hljs-attribute">left</span>: <span class="hljs-number">50%</span>;
+        <span class="hljs-attribute">top</span>: <span class="hljs-number">50%</span>;
+        <span class="hljs-attribute">transform</span>: <span class="hljs-built_in">translate</span>(-50%,-50%);
+    }
+    <span class="hljs-comment">/* 设置球球动画 */</span>
+    @<span class="hljs-keyword">keyframes</span> qiuqiu {
+        0% {
+            <span class="hljs-attribute">top</span>:-<span class="hljs-number">25px</span>;
+        }
+        100% {
+            <span class="hljs-attribute">top</span>:<span class="hljs-number">25px</span>;
+        }
+    }
+    <span class="hljs-comment">/* 设置球的属性 */</span>
+    <span class="hljs-selector-class">.qiu</span> {
+        <span class="hljs-attribute">position</span>: relative;
+        <span class="hljs-attribute">top</span>: -<span class="hljs-number">25px</span>;
+        <span class="hljs-attribute">float</span>: left;
+        <span class="hljs-attribute">margin</span>: <span class="hljs-number">10px</span>;
+        <span class="hljs-attribute">height</span>: <span class="hljs-number">40px</span>;
+        <span class="hljs-attribute">width</span>: <span class="hljs-number">40px</span>;
+        <span class="hljs-attribute">border-radius</span>: <span class="hljs-number">50%</span>;
+        <span class="hljs-attribute">background-color</span>: <span class="hljs-number">#4285f4</span>;
+        <span class="hljs-attribute">animation</span>: qiuqiu .<span class="hljs-number">4s</span> ease-in-out infinite alternate;
+    }
+    <span class="hljs-comment">/* 分别为后面的小球设置颜色和延时 */</span>
+    <span class="hljs-selector-class">.qiu</span><span class="hljs-selector-pseudo">:nth-child(2)</span> {
+        <span class="hljs-attribute">animation-delay</span>: <span class="hljs-number">0.1s</span>;
+        <span class="hljs-attribute">background-color</span>: <span class="hljs-number">#0f9d58</span>;
+    }
+    <span class="hljs-selector-class">.qiu</span><span class="hljs-selector-pseudo">:nth-child(3)</span> {
+        <span class="hljs-attribute">animation-delay</span>: <span class="hljs-number">0.2s</span>;
+        <span class="hljs-attribute">background-color</span>: <span class="hljs-number">#f4b400</span>;
+    }
+    <span class="hljs-selector-class">.qiu</span><span class="hljs-selector-pseudo">:nth-child(4)</span> {
+        <span class="hljs-attribute">animation-delay</span>: <span class="hljs-number">0.3s</span>;
+        <span class="hljs-attribute">background-color</span>: <span class="hljs-number">#db4437</span>;
+    }
+
+    </span><span class="hljs-tag">&lt;/<span class="hljs-name">style</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"box"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"qiu"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"qiu"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"qiu"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"qiu"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span>
+</div></code></pre>
+<h1>Day4课程补充知识（非常多）</h1>
+<ul>
+<li><a href="https://ke.qq.com/webcourse/index.html#course_id=20945&amp;term_id=100003219&amp;taid=638975169548753&amp;vid=t1410nxa13p">软谋教育 CSS动画</a></li>
+<li><a href="https://www.zhihu.com/question/20976405">什么是响应式布局设计？</a></li>
+<li><a href="https://www.cnblogs.com/2050/p/3877280.html">viewport 深入理解</a></li>
+<li><a href="https://developer.mozilla.org/zh-CN/docs/Web/Guide/CSS/Media_queries">CSS 媒体查询</a></li>
+<li><a href="http://imweb.io/topic/56dff5121a5f05dc506430da">下手响应式及断点设置分析</a></li>
+</ul>
+<h2>整体布局</h2>
+<ul>
+<li><a href="https://blog.html.it/layoutgala/index.html">浮动布局精华 Layout Gala（参考流体负 margin 布局部分）</a></li>
+<li><a href="http://flexboxgrid.com/">Flexbox Grid（使用 flexbox 的网格布局系统）</a></li>
+<li><a href="https://zellwk.com/blog/responsive-grid-system/">How to build a responsive grid system</a></li>
+</ul>
+<h2>内容处理相关</h2>
+<ul>
+<li><a href="http://mux.alimama.com/posts/785">响应式导航解析</a></li>
+<li><a href="http://www.alistapart.com/articles/creating-intrinsic-ratios-for-video/">video 自适应问题</a></li>
+<li><a href="http://www.w3cplus.com/blog/tags/509.html">响应式图片处理101系列(共10篇)</a></li>
+<li><a href="https://css-tricks.com/responsive-data-table-roundup/">table 处理</a></li>
+<li><a href="http://www.swiper.com.cn/">图片滚动</a></li>
+</ul>
+<h2>框架相关</h2>
+<ul>
+<li><a href="http://v3.bootcss.com/">Bootstrap</a></li>
+<li><a href="http://www.foundcss.com/">Foundation</a></li>
+</ul>
+<h2>工具相关</h2>
+<ul>
+<li><a href="https://segmentfault.com/a/1190000000581601">使用Chrome测试页面响应性</a></li>
+<li><a href="http://www.css88.com/doc/chrome-devtools/device-mode/emulate-mobile-viewports/">测试响应和设备特定可视窗口</a></li>
+<li><a href="http://screensiz.es/phone">Screensiz.es</a></li>
+<li><a href="https://github.com/scottjehl/Respond">Respond.js</a></li>
+</ul>
+<h2>其他</h2>
+<ul>
+<li>
+<p><a href="https://mediaqueri.es/">响应式案例</a></p>
+</li>
+<li>
+<p><a href="https://bradfrost.github.io/this-is-responsive/resources.html">响应式资源汇总</a></p>
+</li>
+<li>
+<p>书籍：<a href="https://www.gitbook.com/book/jobrest/web-html5-css3/details">《响应式Web设计-HTML5和CSS3实践》</a>（英文名为：Responsive Web Design width HTML5 and CSS3）作者：Ben Frain</p>
+</li>
+<li>
+<p><a href="http://www.w3school.com.cn/html5/">w3school html5 学习资料</a></p>
+</li>
+<li>
+<p><a href="http://www.w3school.com.cn/css3/">w3school CSS3 学习资料</a></p>
+</li>
+</ul>
+<h1>Day4总结</h1>
+<p>动画这一点儿的东西挺多的，只是靠上课那点儿东西自己不自己查的话，作为新手是很难搞清楚的，在一个就是如果之前用过其他软件（比如AE）做过小动画的话，这一点儿理解起来就很容易了，chrome的调试工具中还可以直接拉贝塞尔曲线实时看到效果很赞。</p>
+<h1>Day4干货分享</h1>
+<p>2017前端框架及进阶知识汇总<br>
+http://www.jianshu.com/p/302f14643c69</p>
+<p>10个优美的程序猿把玩儿的实用科技设计酷站<br>
+http://www.jianshu.com/p/37a5998f6a20</p>
+<h1>Day5课程内容</h1>
+<p>Day5讲的是JS的基本知识，有编程基础的都不会难理解。</p>
+<h2>js知识整理（持续更新中）</h2>
+<ul>
+<li>https://github.com/xluos/note-and-blog/blob/master/Javascript%E8%AE%B0%E5%BD%95.md</li>
+</ul>
+<h2>对象的操作</h2>
+<p>因为有编程基础所以知道对象和实例是怎么回事儿</p>
+<ul>
+<li>定义：js中的对象定义很容易也很方便，使用大括号包裹键值对定义如下图：<br>
+<img src="http://www.xluos.com/usr/uploads/2017/12/1730028395.png" alt="TIM截图20171226163757.png"></li>
+<li>定义对象还有很多种方法</li>
+<li>当key不是合法字符时，需要用引号包裹，访问方法为<code>Obj['key']</code>,key为合法字符时使用 <code>.</code> 来访问如：<code>Obj.key</code>（合法字符即：仅有数字、字母、下划线和$组成，且必须以字母、下划线或$开头）</li>
+<li>js中的对象是动态类型可以直接用访问的方法为对象添加属性。如：<pre class="hljs"><code><div><span class="hljs-keyword">var</span> stu = {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'小明'</span>
+}
+stu.age = <span class="hljs-number">20</span>;
+stu.age; <span class="hljs-comment">// undefined</span>
+stu.age = <span class="hljs-number">20</span>; <span class="hljs-comment">// 新增一个age属性</span>
+stu.age; <span class="hljs-comment">// 20</span>
+<span class="hljs-keyword">delete</span> stu.age; <span class="hljs-comment">// 删除age属性</span>
+stu.age; <span class="hljs-comment">// undefined</span>
+<span class="hljs-keyword">delete</span> stu[<span class="hljs-string">'name'</span>]; <span class="hljs-comment">// 删除name属性</span>
+stu.name; <span class="hljs-comment">// undefined</span>
+<span class="hljs-keyword">delete</span> stu.school; <span class="hljs-comment">// 删除一个不存在的school属性也不会报错</span>
+</div></code></pre>
+</li>
+</ul>
+<h2>函数</h2>
+<ul>
+<li>js中函数使用关键字<code>function</code>定义，定义方法如下：<br>
+<img src="http://www.xluos.com/usr/uploads/2017/12/4086292101.png" alt="TIM截图20171226170754.png"><pre class="hljs"><code><div><span class="hljs-comment">// 定义语法 第一种</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fname</span>(<span class="hljs-params">参数列表</span>) </span>{
+    <span class="hljs-comment">//函数体</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-comment">//返回值，返回什么根据情况而定</span>
+}
+
+<span class="hljs-comment">// 定义语法 第二种</span>
+<span class="hljs-keyword">var</span> fneme = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">参数列表</span>) </span>{
+    <span class="hljs-comment">//函数体</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-comment">//返回值，返回什么根据情况而定</span>
+}
+
+</div></code></pre>
+</li>
+<li>两种定义方法的区别，第一种无论写在那里都可以调用，而第二种必须在函数后面才能调用，为什么呢？
+<ol>
+<li>js的解释器会在碰到第一种方式定义的函数时会在全局声明这个函数</li>
+<li>第二种其实就是定义了一个匿名函数，然后将这个匿名函数复制给了变量<code>fname</code>，所以如果在函数前调用的话，这个变量还没有定义，当然不能用了</li>
+</ol>
+</li>
+</ul>
+<h2>函数作用域</h2>
+<p><img src="http://www.xluos.com/usr/uploads/2017/12/808550425.png" alt="TIM截图20171226172352.png"></p>
+<ul>
+<li>用<code>var</code>定义的是局部变量，在函数之外不能访问，没有用<code>var</code>的变量是全局的</li>
+<li>内部可以<strong>层层往上</strong>访问父级的作用域</li>
+</ul>
+<h2>闭包</h2>
+<p>刚说到作用域，js中说到作用域就不能不说闭包</p>
+<blockquote>
+<p><strong>闭包</strong>是指有权访问另一个函数作用域中的变量的函数——《javascript高级程序设计》</p>
+</blockquote>
+<blockquote>
+<p><a href="https://zh.wikipedia.org/w/index.php?title=%E9%97%AD%E5%8C%85_(%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6)&amp;variant=zh-cn">维基百科中闭包的解释</a><br>
+在计算机科学中，<strong>闭包</strong>（英语：Closure），又称<strong>词法闭包</strong>（Lexical Closure）或<strong>函数闭包</strong>（function closures），是引用了自由变量的函数。这个被引用的自由变量将和这个函数一同存在，即使已经离开了创造它的环境也不例外。所以，有另一种说法认为<strong>闭包是由函数和与其相关的引用环境组合而成的实体。</strong> 闭包在运行时可以有多个实例，不同的引用环境和相同的函数组合可以产生不同的实例。</p>
+</blockquote>
+<p>并不是说一个函数返回另一个函数就是闭包了，如果那个函数没有访问其他函数作用域中的变量就不能算是闭包</p>
+<p>使用闭包可以在函数外部访问函数内的局部变量，及时函数执行完毕相关变量也不会被销毁</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">f1</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">var</span> name = <span class="hljs-string">'小明'</span>;
+    <span class="hljs-keyword">var</span> n = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>)</span>{
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"n = "</span>,n);
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"name = "</span>,name);
+        n++;
+    }
+}
+
+<span class="hljs-keyword">var</span> f2 = f1();
+
+f2();
+<span class="hljs-comment">// n =  0</span>
+<span class="hljs-comment">// name =  小明</span>
+f2();
+<span class="hljs-comment">// n =  1</span>
+<span class="hljs-comment">// name =  小明</span>
+</div></code></pre>
+<h1>Day5课程补充知识</h1>
+<ul>
+<li>w3cscool学习数据类型 （http://www.w3school.com.cn/js/js_functions.asp）</li>
+<li>w3school js学习、运算符、 if、for、switch （http://www.w3school.com.cn/js/js_functions.asp）</li>
+</ul>
+<h1>Day5总结</h1>
+<p>这一天讲的是js基础知识，虽然只是基础，但是一天的时间也是远远不够的，老师讲的比较浅还是需要自己下去多看书多钻研，关于闭包了目前的理解仅仅只有这么多。今后会慢慢的理解的更深刻。</p>
+<h1>Day5干货分享</h1>
+<ul>
+<li>如何在三年内快速成长为一名技术专家<br>
+http://www.jianshu.com/p/c4a597ab8dc1</li>
+<li>常用的正则表达式整理<br>
+http://www.jianshu.com/p/dcbbfaf424cf</li>
+</ul>
+<h1>Day6课程内容</h1>
+<p>这一节的内容是DOM，之前一直再看基础的部分，DOM、BOM、事件这一块没怎么接触过，正好借这次机会接触一下这些。当然以后还是要继续深入的。</p>
+<h2>DOM是什么？</h2>
+<p>全称<strong>文档对象模型（Document Object Model）</strong>，是代码到渲染效果的中间过程，是JS操作页面的桥梁（个人理解）</p>
+<blockquote>
+<p>Document 接口提供了一些在浏览器服务中作为页面内容入口点而加载的一些页面，也就是 DOM 树。 DOM 树包括诸如<code>&lt;body&gt;</code>和<code>&lt;table&gt;</code>之类的元素，及其他元素。其也为文档（document）提供了全局性的函数，例如获取页面的 URL、在文档中创建新的 element 的函数。——<a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Document">MDN</a></p>
+</blockquote>
+<p><img src="http://www.xluos.com/usr/uploads/2017/12/2922839190.png" alt="TIM截图20171226181851.png"></p>
+<h2>DOM操作</h2>
+<h3>DOM查找</h3>
+<p><code>document</code>和<code>Element</code>的区别，<code>document</code>是整个页面，页面载入时整个页面会成为一个<code>document</code>对象。<code>element</code>表示的是一个<code>HTML</code>元素对象，是<code>document</code>中的一个节点<br>
+<img src="http://www.xluos.com/usr/uploads/2017/12/2603358435.png" alt=""><br>
+这些查找方法他们的返回值都是<code>element</code>对象或<code>element</code>对象集合</p>
+<ul>
+<li><code>document.getElementById()</code>
+<ul>
+<li>从名字就可以看出来通过<code>元素ID</code>来查找元素</li>
+</ul>
+</li>
+<li><code>[document | Element].getElementsByClassName()</code>
+<ul>
+<li>通过<code>class</code>查找，返回是多个元素，是一个“集合”，可以使用数组方法</li>
+</ul>
+</li>
+<li><code>[document | Element].getElementsByTagName()</code>
+<ul>
+<li>通过标签名查找</li>
+</ul>
+</li>
+<li><code>[document | Element].querySelector()</code>
+<ul>
+<li>通过css选择器选择元素，参数为任何合法的<code>css选择器</code>，有多个的情况只选中第一个</li>
+</ul>
+</li>
+<li><code>[document | Element].querySelectorAll()</code>
+<ul>
+<li>和<code>querySelector()</code>用法一样，但是可以选中所有的，返回是一个“集合”</li>
+</ul>
+</li>
+</ul>
+<h3>DOM新增与删除</h3>
+<ul>
+<li>
+<p><code>document.createElement()</code>创建元素节点。参数：元素名称的字符串</p>
+</li>
+<li>
+<p><code>document.createTextNode()</code>创建文本节点。参数：文本字符串</p>
+</li>
+<li>
+<p><code>document.createAttribute()</code>创建一个属性节点。参数：属性名（比如：<code>id</code>、<code>class</code>、<code>style</code>、<code>src</code>、<code>onclick</code>等）</p>
+<ul>
+<li>访问<code>value</code>属性，为这个属性写入值</li>
+</ul>
+</li>
+<li>
+<p><code>document.createComment()</code>createComment() 方法可创建注释节点。参数：注释字符串</p>
+</li>
+<li>
+<p>insertBefore() 前面插入元素节点注释节点</p>
+<ul>
+<li>语法：<code>node.insertBefore(newnode,existingnode)</code>  <strong>注意：node为插入节点的父节点</strong></li>
+<li><code>newnode</code> 必须。要插入的节点对象</li>
+<li><code>existingnode</code>  必须。(新节点的参照对象)</li>
+<li>如果插入的节点是文档中已有的节点，会先删除那个节点然后插入。</li>
+<li>返回值：节点对象，你插入的那个节点</li>
+</ul>
+</li>
+<li>
+<p>appendChild() 后面插入元素节点注释节点</p>
+<ul>
+<li>语法：<code>NODE.appendChild(node)</code> <strong>注意：NODE为插入节点的父节点</strong></li>
+<li>参数：<code>node</code> 你要添加的节点对象。</li>
+</ul>
+</li>
+<li>
+<p>setAttributeNode() 插入属性节点</p>
+<ul>
+<li>语法：<code>element.setAttributeNode(attributenode)</code></li>
+<li>返回值：替换的属性节点，没有则为<code>null</code></li>
+</ul>
+</li>
+<li>
+<p>removeChild() 删除元素节点注释节点</p>
+<ul>
+<li>语法：<code>node.removeChild(node)</code> <strong>第一个node是删除节点的父节点</strong></li>
+<li>返回值：删除的节点</li>
+</ul>
+</li>
+<li>
+<p>removeNamedItem() 和removeAttribute() 删除属性</p>
+<ul>
+<li>语法：<code>namednodemap.removeNamedItem(nodename)</code></li>
+<li><code>element.removeAttribute(attributename)</code><br>
+<img src="http://www.xluos.com/usr/uploads/2017/12/3024108033.png" alt=""></li>
+<li><code>attributes 属性</code>：返回指定节点属性的集合。</li>
+<li><code>removeAttribute()</code>更方便</li>
+</ul>
+</li>
+<li>
+<p>如何选择一个节点的子节点</p>
+<ul>
+<li>使用<code>childNodes</code>属性，会返回一个子节点集合（这个属性包含空白字符，空白字符为一个<code>text</code>节点）</li>
+<li>使用<code>children</code>属性，获得一个不包含空白字符的集合</li>
+<li>使用<code>firstElementChild</code>属性，获得第一个节点（不含空白字符）</li>
+<li>使用<code>firstChild</code>属性，获得第一个节点（含空白字符）</li>
+<li>使用<code>listElementChild</code>属性，获得最后一个节点（不含空白字符）</li>
+<li>使用<code>listChild</code>属性，获得最后一个节点（含空白字符）</li>
+</ul>
+</li>
+<li>
+<p>DocumentFragment</p>
+<ul>
+<li>这是一个游离在DOM树之外的代码片段，如果要插入大量节点时（循环插入），频繁的操作DOM树会导致频繁渲染页面卡顿，所以可以使用这种方法来加速，现将插入的操作添加进<code>DocumentFragment</code> 中，然后将<code>DocumentFragment</code>一次性插入DOM树。</li>
+<li>下面是示例</li>
+</ul>
+<pre class="hljs"><code><div><span class="hljs-keyword">var</span> body = <span class="hljs-built_in">document</span>.body;
+<span class="hljs-keyword">var</span> len = <span class="hljs-number">100</span>;
+<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>;
+<span class="hljs-keyword">var</span> flagment = <span class="hljs-built_in">document</span>.createDocumentFragment(); <span class="hljs-comment">// 使用 fragment 来提高性能</span>
+<span class="hljs-keyword">var</span> ul = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'ul'</span>);
+<span class="hljs-keyword">var</span> li;
+<span class="hljs-keyword">var</span> textNode;
+
+body.appendChild(ul);
+
+<span class="hljs-keyword">for</span> (; i &lt; len; i++) {
+    li = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'li'</span>);
+    textNode = <span class="hljs-built_in">document</span>.createTextNode(i + <span class="hljs-number">1</span>);
+    li.appendChild(textNode);
+    <span class="hljs-comment">// 添加到虚拟节点中</span>
+    flagment.appendChild(li);  
+}
+<span class="hljs-comment">// 将虚拟节点插入DOM树</span>
+ul.appendChild(flagment);
+</div></code></pre>
+</li>
+</ul>
+<p>推荐 <a href="http://www.runoob.com/jsref/dom-obj-document.html">菜鸟教程</a> 和 <a href="http://www.w3school.com.cn/jsref/dom_obj_document.asp">W3School</a></p>
+<p>点击查看<a href="https://xluos.github.io/demo/NEXT%E5%AD%A6%E4%BD%8DDemo/DocumentFragment%E5%8A%A0%E9%80%9F%E5%AE%9E%E9%AA%8C.html">demo</a></p>
+<h2>事件</h2>
+<p>事件无处不在，用户的所有操作都是时间，鼠标的滑动、点击、按下、弹起，窗口改变、按键、滑动等等等都是时间</p>
+<p>通过事件我们可以响应用户的一些操作，根据用户不同的操作来改变不同的东西，比如点击不同的按钮改变背景颜色，点击按钮的次数改变颜色等等</p>
+<h3>事件模型</h3>
+<p>早期分为两种事件冒泡和事件捕获</p>
+<p><img src="http://www.xluos.com/usr/uploads/2017/12/2199818116.png" alt="微信截图_20171226221655.png"></p>
+<p>现代的DOM事件流是下面这样的过程</p>
+<p><img src="http://www.xluos.com/usr/uploads/2017/12/165662479.png" alt="TIM截图20171226221729.png"></p>
+<h3>事件类型（事件句柄）</h3>
+<h4>鼠标类</h4>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">属性</th>
+<th style="text-align:left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">click</td>
+<td style="text-align:left">当用户点击某个对象时调用的事件句柄。</td>
+</tr>
+<tr>
+<td style="text-align:left">contextmenu</td>
+<td style="text-align:left">在用户点击鼠标右键打开上下文菜单时触发</td>
+</tr>
+<tr>
+<td style="text-align:left">dblclick</td>
+<td style="text-align:left">当用户双击某个对象时调用的事件句柄。</td>
+</tr>
+<tr>
+<td style="text-align:left">mousedown</td>
+<td style="text-align:left">鼠标按钮被按下。</td>
+</tr>
+<tr>
+<td style="text-align:left">mouseenter</td>
+<td style="text-align:left">当鼠标指针移动到元素上时触发。</td>
+</tr>
+<tr>
+<td style="text-align:left">mouseleave</td>
+<td style="text-align:left">当鼠标指针移出元素时触发</td>
+</tr>
+<tr>
+<td style="text-align:left">mousemove</td>
+<td style="text-align:left">鼠标被移动。</td>
+</tr>
+<tr>
+<td style="text-align:left">mouseover</td>
+<td style="text-align:left">鼠标移到某元素之上。</td>
+</tr>
+<tr>
+<td style="text-align:left">mouseout</td>
+<td style="text-align:left">鼠标从某元素移开。</td>
+</tr>
+<tr>
+<td style="text-align:left">mouseup</td>
+<td style="text-align:left">鼠标按键被松开。</td>
+</tr>
+</tbody>
+</table>
+<h4>键盘类</h4>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">属性</th>
+<th style="text-align:left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">keydown</td>
+<td style="text-align:left">某个键盘按键被按下。</td>
+</tr>
+<tr>
+<td style="text-align:left">keypress</td>
+<td style="text-align:left">某个键盘按键被按下并松开。</td>
+</tr>
+<tr>
+<td style="text-align:left">keyup</td>
+<td style="text-align:left">某个键盘按键被松开。</td>
+</tr>
+</tbody>
+</table>
+<h4>其他事件</h4>
+<p><a href="http://www.runoob.com/jsref/dom-obj-event.html">点击查看更多事件</a></p>
+<h3>事件绑定与解绑</h3>
+<p>一、通过DOM操作绑定<br>
+推荐用这种方法，并且通过DOM操作绑定的事件可以同一事件多次绑定。</p>
+<ul>
+<li>
+<p>语法：<code>[document | Element].addEventListener(event, function, useCapture)</code></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">属性</th>
+<th style="text-align:left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">event</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">function</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">useCapture</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>解绑事件：<code>[document | Element].removeEventListener(event, function, useCapture)</code></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">属性</th>
+<th style="text-align:left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">event</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">function</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">useCapture</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+<p>二、直接绑定至属性</p>
+<ul>
+<li>语法：</li>
+<li><strong>注意： 直接写到属性需要使用 &quot;on&quot; 前缀。例如，使用 &quot;onclick&quot; 来取代 &quot;click&quot;。</strong><pre class="hljs"><code><div><span class="hljs-comment">//HTML中</span>
+&lt;element onclick=<span class="hljs-string">"SomeJavaScriptCode"</span>&gt;
+<span class="hljs-comment">//js中</span>
+object.onclick=<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{SomeJavaScriptCode};
+</div></code></pre>
+</li>
+<li><code>SomeJavaScriptCode</code>：必须，规定该事件发生时执行的 JavaScript。</li>
+<li>解绑事件：删除该属性即可解绑该事件</li>
+</ul>
+<h1>Day6课程补充知识</h1>
+<ul>
+<li>职坐标-常见的事件类型 （https://ke.qq.com/webcourse/index.html#course_id=8493&amp;term_id=100133314&amp;taid=532288181903661&amp;vid=j1400yqwbbb）</li>
+<li>尚硅谷JavaScript DOM全套视频 （https://ke.qq.com/course/26269#tuin=b64d5a3e）</li>
+</ul>
+<p>有两个404了就不放了</p>
+<h1>Day6总结</h1>
+<p>这一节的内容也比较多，查了很长时间零零碎碎的总结了这么多，看着课程有跳跃的感觉，可能是从完整版中挑出来的几节吧，DOM和事件应该是JS的关键几个点儿，这个仅仅只能满足基本操作，各种属性方法浩如烟海还是需要满满积累。</p>
+<h1>Day6干货分享</h1>
+<p>程序猿小白应该注意什么<br>
+https://juejin.im/post/59e96c756fb9a0450a6679da</p>
+<p>前端移动端适配总结<br>
+https://juejin.im/entry/59e70320f265da431c6f6514</p>
+<h1>Day7课程内容</h1>
+<ul>
+<li><strong>this</strong><br>
+<img src="http://www.xluos.com/usr/uploads/2017/12/3505202749.png" alt="this"><br>
+个人理解为，谁调用谁就是<code>this</code>，全局下面<code>this</code>就是<code>window</code>，关键是分清到底是谁调用了这个带<code>this</code>的方法，谁就是<code>this</code></li>
+<li><strong>对象和实例</strong><br>
+在其他语言中大概就是<strong>类与对象</strong>，对象是对一类事物的抽象出来的描述并没有具体的存在与内存中也没有具体的数值，而实例是对象的实例化，具体存在于内存，有数值，可以操作。<br>
+<img src="https://pic3.zhimg.com/50/4112d9dd17779326c86fa68a54848eaf_hd.jpg" alt=""><br>
+一图圣千言来自https://link.zhihu.com/?target=http%3A//www.4guysfromrolla.com/webtech/chapters/BuildASPNETWebSite/ch02.2.shtml</li>
+<li><strong>工厂模式</strong></li>
+</ul>
+<blockquote>
+<p>抽象工厂模式提供了一种方式，可以将一组具有同一主题的单独的工厂封装起来。在正常使用中，客户端程序需要创建抽象工厂的具体实现，然后使用抽象工厂作为接口来创建这一主题的具体对象。客户端程序不需要知道（或关心）它从这些内部的工厂方法中获得对象的具体类型，因为客户端程序仅使用这些对象的通用接口。抽象工厂模式将一组对象的实现细节与他们的一般使用分离开来。——维基百科</p>
+</blockquote>
+<p>工厂模式就是想一个工厂一样把原料丢进去，就会生产出来一个需要的产品，不用关系这个产品是怎么生产的。</p>
+<p><img src="http://www.xluos.com/usr/uploads/2017/12/1609244214.png" alt="图像 016.png"></p>
+<p>但是，工厂模式创建对象有一个弊端就是很难准确的判断对象到底是什么类型的，是谁的对象。</p>
+<ul>
+<li>
+<p><strong>构造函数</strong><br>
+<img src="http://www.xluos.com/usr/uploads/2017/12/2694022570.png" alt="构造"></p>
+<p>使用构造函数<br>
+<img src="http://www.xluos.com/usr/uploads/2017/12/2823934297.png" alt="函数"><br>
+构造函数的声明：<br>
+<strong>约定俗成的构造函数首字母大写</strong><br>
+<img src="http://www.xluos.com/usr/uploads/2017/12/4161860130.png" alt="图像 017.png"><br>
+一定要使用 <code>new</code> 关键字来创建对象，这样再能使用 <code>instanceof</code>关键字来判断对象是什么类型的。</p>
+</li>
+<li>
+<p><strong>原型portotype</strong></p>
+<blockquote>
+<p>我们创建的每个函数都有一个 <code>prototype</code> （原型）属性，这个属性是一个指针，指向一个对象，而这个对象的用途是包含可以由特定类型的所有实例共享的属性和方法。如果按照字面意思来理解，那么 <code>prototype</code> 就是通过调用构造函数而创建的那个对象实例的原型对象。使用原型对象的好处是可以让所有对象实例共享它所包含的属性和方法。——《js高程》</p>
+</blockquote>
+<p><img src="http://www.xluos.com/usr/uploads/2017/12/995197295.png" alt="js高程"><br>
+关于原型感觉自己理解的还不是很深，可能要到项目中实际用的多了才能慢慢领悟吧。</p>
+</li>
+<li>
+<p><strong>什么是继承</strong></p>
+<p><strong>继承</strong>可以使子类具有<strong>父类</strong>的<strong>属性和方法</strong>，而不需要重复编写相同的代码，将某些类中共同的属性方法提取出来，形成一个父类，让这些类继承这个父类从而达到减少编写重复代码的效果，js中使用原型链来实现继承<br>
+<img src="http://www.xluos.com/usr/uploads/2017/12/1386106251.png" alt="TIM截图20171228145036.png"></p>
+</li>
+<li>
+<p><strong>什么是原型链</strong><br>
+<img src="http://www.xluos.com/usr/uploads/2017/12/2917318730.png" alt="图像 018.png"><br>
+<img src="http://www.xluos.com/usr/uploads/2017/12/538482539.png" alt="原型链"></p>
+</li>
+</ul>
+<h1>Day7课程补充知识</h1>
+<ul>
+<li>阮一峰 继承机制 （http://www.ruanyifeng.com/blog/2011/06/designing_ideas_of_inheritance_mechanism_in_javascript.html）</li>
+<li>MDN Canvas教程（https://developer.mozilla.org/zh-CN/docs/Web/API/Canvas_API/Tutorial）</li>
+</ul>
+<h1>Day7总结</h1>
+<p>如果说上一节感觉课程是跳跃的，那这一节很明显的看出来课程是不完整的，可能是这一届概念比较重要也比较难懂，没办法简单的讲只能从正式课程中抽出来几节介绍性的，看完确实很迷糊，又跑去看了看书上的介绍依然迷糊。这一节真的是看的难受，这应该是js的难点所在了，慢慢啃书本吧 ╮(╯▽╰)╭</p>
+<h1>Day7干货分享</h1>
+<p>28个纯CSS加载loading动画特效<br>
+http://www.qdfuns.com/notes/40816/f82b78b283e1ca85fa57d8e7c65ca31b.html<br>
+css小细节总结<br>
+http://www.qdfuns.com/notes/47113/f61186cc48e057038e6f39ef212b24f3.html</p>
+<h1>Day7课程内容</h1>
+<ul>
+<li><strong>this</strong><br>
+<img src="http://www.xluos.com/usr/uploads/2017/12/3505202749.png" alt="this"><br>
+个人理解为，谁调用谁就是<code>this</code>，全局下面<code>this</code>就是<code>window</code>，关键是分清到底是谁调用了这个带<code>this</code>的方法，谁就是<code>this</code></li>
+<li><strong>对象和实例</strong><br>
+在其他语言中大概就是<strong>类与对象</strong>，对象是对一类事物的抽象出来的描述并没有具体的存在与内存中也没有具体的数值，而实例是对象的实例化，具体存在于内存，有数值，可以操作。<br>
+<img src="https://pic3.zhimg.com/50/4112d9dd17779326c86fa68a54848eaf_hd.jpg" alt=""><br>
+一图圣千言来自https://link.zhihu.com/?target=http%3A//www.4guysfromrolla.com/webtech/chapters/BuildASPNETWebSite/ch02.2.shtml</li>
+<li><strong>工厂模式</strong></li>
+</ul>
+<blockquote>
+<p>抽象工厂模式提供了一种方式，可以将一组具有同一主题的单独的工厂封装起来。在正常使用中，客户端程序需要创建抽象工厂的具体实现，然后使用抽象工厂作为接口来创建这一主题的具体对象。客户端程序不需要知道（或关心）它从这些内部的工厂方法中获得对象的具体类型，因为客户端程序仅使用这些对象的通用接口。抽象工厂模式将一组对象的实现细节与他们的一般使用分离开来。——维基百科</p>
+</blockquote>
+<p>工厂模式就是想一个工厂一样把原料丢进去，就会生产出来一个需要的产品，不用关系这个产品是怎么生产的。</p>
+<p><img src="http://www.xluos.com/usr/uploads/2017/12/1609244214.png" alt="图像 016.png"></p>
+<p>但是，工厂模式创建对象有一个弊端就是很难准确的判断对象到底是什么类型的，是谁的对象。</p>
+<ul>
+<li>
+<p><strong>构造函数</strong><br>
+<img src="http://www.xluos.com/usr/uploads/2017/12/2694022570.png" alt="构造"></p>
+<p>使用构造函数<br>
+<img src="http://www.xluos.com/usr/uploads/2017/12/2823934297.png" alt="函数"><br>
+构造函数的声明：<br>
+<strong>约定俗成的构造函数首字母大写</strong><br>
+<img src="http://www.xluos.com/usr/uploads/2017/12/4161860130.png" alt="图像 017.png"><br>
+一定要使用 <code>new</code> 关键字来创建对象，这样再能使用 <code>instanceof</code>关键字来判断对象是什么类型的。</p>
+</li>
+<li>
+<p><strong>原型portotype</strong></p>
+<blockquote>
+<p>我们创建的每个函数都有一个 <code>prototype</code> （原型）属性，这个属性是一个指针，指向一个对象，而这个对象的用途是包含可以由特定类型的所有实例共享的属性和方法。如果按照字面意思来理解，那么 <code>prototype</code> 就是通过调用构造函数而创建的那个对象实例的原型对象。使用原型对象的好处是可以让所有对象实例共享它所包含的属性和方法。——《js高程》</p>
+</blockquote>
+<p><img src="http://www.xluos.com/usr/uploads/2017/12/995197295.png" alt="js高程"><br>
+关于原型感觉自己理解的还不是很深，可能要到项目中实际用的多了才能慢慢领悟吧。</p>
+</li>
+<li>
+<p><strong>什么是继承</strong></p>
+<p><strong>继承</strong>可以使子类具有<strong>父类</strong>的<strong>属性和方法</strong>，而不需要重复编写相同的代码，将某些类中共同的属性方法提取出来，形成一个父类，让这些类继承这个父类从而达到减少编写重复代码的效果，js中使用原型链来实现继承<br>
+<img src="http://www.xluos.com/usr/uploads/2017/12/1386106251.png" alt="TIM截图20171228145036.png"></p>
+</li>
+<li>
+<p><strong>什么是原型链</strong><br>
+<img src="http://www.xluos.com/usr/uploads/2017/12/2917318730.png" alt="图像 018.png"><br>
+<img src="http://www.xluos.com/usr/uploads/2017/12/538482539.png" alt="原型链"></p>
+</li>
+</ul>
+<h1>Day7课程补充知识</h1>
+<ul>
+<li>阮一峰 继承机制 （http://www.ruanyifeng.com/blog/2011/06/designing_ideas_of_inheritance_mechanism_in_javascript.html）</li>
+<li>MDN Canvas教程（https://developer.mozilla.org/zh-CN/docs/Web/API/Canvas_API/Tutorial）</li>
+</ul>
+<h1>Day7总结</h1>
+<p>如果说上一节感觉课程是跳跃的，那这一节很明显的看出来课程是不完整的，可能是这一届概念比较重要也比较难懂，没办法简单的讲只能从正式课程中抽出来几节介绍性的，看完确实很迷糊，又跑去看了看书上的介绍依然迷糊。这一节真的是看的难受，这应该是js的难点所在了，慢慢啃书本吧 ╮(╯▽╰)╭</p>
+<h1>Day7干货分享</h1>
+<p>28个纯CSS加载loading动画特效<br>
+http://www.qdfuns.com/notes/40816/f82b78b283e1ca85fa57d8e7c65ca31b.html<br>
+css小细节总结<br>
+http://www.qdfuns.com/notes/47113/f61186cc48e057038e6f39ef212b24f3.html</p>
+<h1>Day9课程内容</h1>
+<p>腾讯大佬送你前端就业经，这章内容虽然不是技术上的，在我看来也是干货满满，非常有用</p>
+<h2>前端就业市场分析</h2>
+<ul>
+<li>全世界都在招前端<br>
+目前因为培训公司大量涌入，导致初级前端过饱和，但是高级的，有实力的还是非常缺少<br>
+<img src="http://www.xluos.com/usr/uploads/2017/12/1880441388.png" alt="前端"></li>
+</ul>
+<h2>积累经验打造硬实力</h2>
+<ul>
+<li>找地方搞事<br>
+<img src="http://www.xluos.com/usr/uploads/2017/12/1152458494.png" alt="找个地方搞事"><br>
+多在各种论坛问答，写技术博文等等。要懂得宣传自己（有一个学长就是经常在知乎写东西毕业就进腾讯了ps：二本院校），除了图上的还有两个社区我感觉不错的，<strong>掘金</strong>，<strong>segmentfault</strong></li>
+<li>给开源项目贡献代码，开源自己的项目</li>
+<li>如何写文章，积累文章<br>
+<img src="http://www.xluos.com/usr/uploads/2017/12/2341830483.png" alt="如何写文章"></li>
+</ul>
+<h2>制作一份好简历</h2>
+<ul>
+<li>简历形式要有些“套路”<br>
+推荐<code>word</code>，<code>pdf</code>版本，拒绝表格式简历，可以体现技术的响应式简历也是加分项<br>
+<img src="http://www.xluos.com/usr/uploads/2017/12/3136272839.png" alt="简历形式"></li>
+<li>简历内容
+<ul>
+<li>内推更看重<strong>技术和平时积累</strong></li>
+<li>HR更根据学历推荐</li>
+<li>获奖经历和自我评价不要太多</li>
+<li>工作经历和作品<br>
+<img src="http://www.xluos.com/usr/uploads/2017/12/2463978060.png" alt="简历内容"></li>
+</ul>
+</li>
+<li>如何写好项目经历<br>
+<img src="http://www.xluos.com/usr/uploads/2017/12/3786326694.png" alt="项目经历">
+<ul>
+<li>项目经历需要简单，但是不能写的太简单，需要面试人员去试探询问你的项目情况，<strong>下面这种简历就是没有吸引力的</strong><br>
+<img src="http://www.xluos.com/usr/uploads/2017/12/2672910336.png" alt="项目经历反面"></li>
+<li>合适的项目经历需要：项目描述、你担任的角色、用到的技术，这样可以<br>
+<img src="http://www.xluos.com/usr/uploads/2017/12/3919353642.png" alt="项目经历优化"></li>
+</ul>
+</li>
+<li>加分项<br>
+<img src="http://www.xluos.com/usr/uploads/2017/12/1114287068.png" alt="加分项"></li>
+</ul>
+<h2>面试官如何出题</h2>
+<h3>一、自我介绍</h3>
+<p>如何证明自己是牛B的，聪明的？不要长篇大论，如果是应届生，简单的说一下自己再学校的经历，学过什么技术。可以提前写好背下来，这是每个面试的套路</p>
+<h3>二、技术基础是否扎实</h3>
+<p><img src="http://www.xluos.com/usr/uploads/2017/12/1493257162.png" alt="js"><br>
+所有的面试都是有面试记录，部分方面回答的不好不要紧，最后会综合考量。（以前看过一个说法不知道是否准确，面试会不断问比各种边缘知识点，目的就是要找到你的知识边缘，而不是在可以难为你）</p>
+<h3>三、是否具有研究精神</h3>
+<p><img src="http://www.xluos.com/usr/uploads/2017/12/932588382.png" alt=""></p>
+<p>对于一个工具库，框架不能只停留在用的阶段要具有研究精神，深入了解底层到底是怎么回事儿，这样才有解决深层次问题的能力，问题出现时不至于手足无措。</p>
+<p>刚开始所有人都是模仿者，学习已有的技术用法，学会了再能化为己用可以改造各种库、框架，甚至是自己造轮子成为大牛。</p>
+<h3>四、没有造假</h3>
+<p><img src="http://www.xluos.com/usr/uploads/2017/12/1805004473.png" alt="面试经典问题"><br>
+面试经典问题。<br>
+项目中遇到过什么问题？这些问题有哪些解决方案？这些方案都有那些优劣？为什么最后选择了使用的方案等</p>
+<h3>五、沟通能力没有问题</h3>
+<p><img src="http://www.xluos.com/usr/uploads/2017/12/1809834217.png" alt="沟通"></p>
+<h3>六、其他套路问题</h3>
+<p><img src="http://www.xluos.com/usr/uploads/2017/12/1484505744.png" alt="其他套路"></p>
+<h2>面试常考点</h2>
+<blockquote>
+<p>这里为大家简单做了一个面试知识的图谱（包括但不限制于这些知识）。当然不同岗位级别，不同部门，不同公司的要求都不一样，甚至于不同的面试官都是有很多差别的。所以被选中既是实力证明也是幸运的，而被拒也是很正常的，大家加油~（NEXT学位老师做的不是我つ﹏⊂）</p>
+</blockquote>
+<p><img src="http://coding.imweb.io/img/p-job/fe-naotu.png" alt="面试常考点"></p>
+<h1>Day9总结</h1>
+<p>这里只是对课程内容做一个简单的记录，还有很多很多老师讲的东西没有写到。关于这个面试经验的感觉真是干货十足学到了很多东西。</p>
+<h1>Day9干货分享</h1>
+<p>前端：常见的6种HTML5错误用法<br>
+http://geek.csdn.net/news/detail/240600</p>
+<p>前端移动端适配总结<br>
+https://segmentfault.com/a/1190000011586301</p>
+<h1>结业感想</h1>
+<p><img src="http://www.xluos.com/usr/uploads/2017/12/1357536157.png" alt="keep learning"><br>
+十天过的很快，没想到十天可以学到这么多东西，课程的内容有的比较简单很快就搞定，有的则需要自己查资料学习好几天。CSS3动画和DOM操作这两节，内容比较多，查各种函数用法属性什么的，还要记录还要实验，用了两三天时间吧，也只是学了个大概用法以后还要深入。</p>
+<p>前端课程的内容讲的很好，比之前网上看的其他视频全面的多，看到我都想买完整版的了，可惜囊中羞涩。唉</p>
+<p>学到最后最大的感慨就是，知道这门课的时候，喊着身边的几个室友同学一块来听，可惜没有一个坚持到底的，基本都在js就放弃了，对比直播的人数，报名总共1000+最后一节直播课居然才去了70个人，可能这就是他们的表现就是大多数人的现状吧。学东西坚持不下去，没有尝试就感觉难学不会身边的同学大多如此。对于自己能坚持到现在很开心，最后送给自己一句话也是开篇的时候学到的那句<strong>Keep learning</strong>，在技术更新迭代如此之快的前端更是如此！</p>
+
+</body>
+</html>
