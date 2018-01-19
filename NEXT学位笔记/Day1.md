@@ -1,6 +1,13 @@
 # 笔记前言
 前端学了并没有多长时间，一直都没有系统的学习过。百度的ife没有赶上，都是看着任务自己写也没有小伙伴交流什么的比较遗憾，这次正好赶上了腾讯NEXT的课程，感觉又可以认识一大帮大佬了，也算是系统的入门一下前端吧。听说每天还有大批干货赠送，希望最后可以拿到公仔☺
 
+另外厚颜无耻的附上[博客](http://www.xluos.com)和[GitHub](https://github.com/xluos)
+
++ 笔记源文件(https://github.com/xluos/note-and-blog/tree/master/NEXT%E5%AD%A6%E4%BD%8D%E7%AC%94%E8%AE%B0)
++ 项目源文件(https://github.com/xluos/demo/tree/gh-pages)
+
+不要吝啬你的Star（撒花）
+
 # Day1直播内容
 开篇直播主要是一个开营仪式，助教和老师们的自我介绍，并且介绍了一下前端的一些东西，可以看出来真的是一个很入门的课程，完全0基础都可以来听都是很合适的。直播老师很厉害大三自学了前端就去面腾讯了（orz）。
 
