@@ -108,6 +108,50 @@ arr.concat(1, 2, [3, 4]); // ['A', 'B', 'C', 1, 2, 3, 4]
 + `join()`方法，将数组中的元素用指定字符串连接起来，返回这个连接好的字符串。如果数组中的元素不是字符串，js会把他们转换为字符串。
 
 ### 两种数据结构Map和Set
+这两种数据结构都是ES6规范中新引入的，如果不支持ES6将无法使用
+#### Map（映射）
+`map`是任意类型的键值对结合形成的集合，具有极快的速度（C++中的Map是利用树来查找时间复杂度`logN`，Javascript中怎么实现目前还不清楚，应该也是类似的结构）。用法如下：
+```js
+//定义
+var mp = new Map([['aaa', 1], ['bbb', 2], ['ccc', 3]]);
+// 添加
+mp.set('ddd',4);
+// 查询是否存在
+mp.has('aaa'); //true
+mp.has('abc'); //false
+
+// 获取key对应的值
+mp.get('bbb'); // 2
+mp.get('abc'); // undefined
+// 删除
+mp.delete('ccc');
+```
+Map中的key是不能重复的，所以对同一key多次赋值会冲掉前面的值。
+
+#### Set（集合）
+集合，顾名思义和数学上的集合一样，值不能重复。所以创建集合和添加元素的时候重复的值会自动删除。Javascript中集合元素的顺序是按照加入的顺序排列的，并不会自动排序。用法如下：
+```js
+// 定义
+var se = new Set([1,21,123]);
+
+// 添加元素
+se.add(4);
+se.add('0');
+
+//遍历元素
+for(var value of se){
+    console.log(value);
+}
+// 1 21 123 4 '0'
+
+// 删除元素
+se.delete(123);
+
+//判断元素是否存在
+se.has('0');  //true
+se.has(123)   //false
+```
+
 ### 判断
 
 和其他语言一样判断都是`if () { ... } else { ... }`的判断，当然也有`switch(n) {case ...: 执行代码块 break;  default: 代码块}`
@@ -121,7 +165,21 @@ arr.concat(1, 2, [3, 4]); // ['A', 'B', 'C', 1, 2, 3, 4]
 
 下面的两种循环类型其他语言中可能就没有：
 + `for (var key in obj)`循环,可以将对象中的所有属性遍历出来。如果只需要对象自身的属性就需要配合`hasOwnProperty()`来实现。因为数组（Array）也是一个对象，所以也可以遍历，但是遍历出来的是数组的下标而不是元素的值。
-+ 
++ `for (var value of iterable)` 这是ES6中新增加循环方法，因为遍历`Array`可以采用下标循环，遍历`Map`和`Set`就无法使用下标。为了统一集合类型，ES6标准引入了新的`iterable`类型，`Array`、`Map`和`Set`都属于`iterable`类型。用法如下：
+    ```js
+    var a = ['A', 'B', 'C'];
+    var s = new Set(['A', 'B', 'C']);
+    var m = new Map([[1, 'x'], [2, 'y'], [3, 'z']]);
+    for (var x of a) { // 遍历Array
+        console.log(x);
+    }
+    for (var x of s) { // 遍历Set
+        console.log(x);
+    }
+    for (var x of m) { // 遍历Map
+        console.log(x[0] + '=' + x[1]);
+    }
+    ```
 
 ### 函数和对象
 #### 对象的操作
@@ -208,5 +266,7 @@ f2();
 // n =  1
 // name =  小明
 ```
+# 参考资料
 
-
+> http://www.w3school.com.cn/js/
+> https://www.liaoxuefeng.com/wiki/001434446689867b27157e896e74d51a89c25cc8b43bdb3000
