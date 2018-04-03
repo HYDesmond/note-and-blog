@@ -9,6 +9,8 @@
 ```
 修改`/sys/kernel/mm/transparent_hugepage/defrag`设置后重启mongo没有报错了，然而系统重启后这个设置又会改回来。
 
+**偶然发现还有另一个办法解决这个警告,就是启用mongo的身份验证这个报错就消失,具体原理还不清楚**
+
 搜索了一通后找到了解决的办法，把修改的命令加入mongo的配置文件里面，这样启动mongo的时候就会修改过来，这样就没有烦人的警告了。方法如下：
 找到`/etc/init/mongod.conf`文件，然后在`script和end script`之间插入下面的代码
 ```
