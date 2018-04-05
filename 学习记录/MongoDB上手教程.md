@@ -100,6 +100,9 @@ mydb   0.000GB
 |root|只在admin数据库中可用。超级账号，超级权限|
 
 # MongoDB的基本操作
+
+## 数据库操作
+
 + 创建数据库
 
     创建数据库很简单，有一个隐式创建的过程
@@ -122,6 +125,8 @@ mydb   0.000GB
     ```
     > db.dropDatabase()
     ```
+
+## 集合操作
 
 + 创建集合
 
@@ -157,4 +162,267 @@ mydb   0.000GB
     col2
     > 
     ```
+## 文档操作
 
++ 插入文档
+
+    mongodb，提供了三个插入文档的方法，如果插入的时候没有指定_id，系统会自动创建一个_id字段
+    ```bash
+    db.collection.insertOne(document)       #用来插入一个文档
+    db.collection.insertMany(document the array)  #插入多个文档，传入参数为文档数组
+    db.collection.insert(document | array)  #万能方法，可以一个也可以传入文档数组插入多个
+    ```
+
+    可以先用一个变量存document，也可以直接传入文档的式子,比如向用户表中添加用户
+    ```bash
+    #直接插入一个文档，文档表示方法类似于js中的对象
+    > db.users.insertOne({
+    ... name: "CodeDeer",
+    ... age: "20"
+    ... })
+    WriteResult({ "nInserted" : 1 })
+    #创建一个文档存进变量中
+    > var cd = {
+    ... name: "CodeDeer",
+    ... age: "20"
+    ... }
+    #插入这个变量
+    > db.users.insertOne(cd)
+    {
+        "acknowledged" : true,
+        "insertedId" : ObjectId("5ac5f38f57ee20d5d777f58c")
+    }
+    #创建一个文档数组，一次插入多个文档
+    > var arr = [{name: "abc", age: 20}, {name: "def", age: 20}]
+    > db.users.insertMany(arr)
+    {
+        "acknowledged" : true,
+        "insertedIds" : [
+            ObjectId("5ac5f3fb57ee20d5d777f58d"),
+            ObjectId("5ac5f3fb57ee20d5d777f58e")
+        ]
+    }
+    #查询，可以看到我们之前插入的文档
+    > db.users.find()
+    { "_id" : ObjectId("5ac5f35957ee20d5d777f58b"), "name" : "CodeDeer", "age" : "20" }
+    { "_id" : ObjectId("5ac5f38f57ee20d5d777f58c"), "name" : "CodeDeer", "age" : "20" }
+    { "_id" : ObjectId("5ac5f3fb57ee20d5d777f58d"), "name" : "abc", "age" : 20 }
+    { "_id" : ObjectId("5ac5f3fb57ee20d5d777f58e"), "name" : "def", "age" : 20 }
+
+    ```
+    还有一个插入文档的方法，或者说是替换更恰当一些`db.collection.save(document)`
+
+    使用save方法时，当**没有指定_id或指定_id不重复时**和insert没有多大区别，如果_id重复，insert方法会报错，而save方法则直接更新该id文档的内容。
+
++ 查询文档
+
+    使用`db.collection.find()`来查询文档，返回值是一个游标，可以通过迭代游标来遍历集合中的文档。如果没有用变量接收游标，默认迭代20次，在shell中显示文档内容。
+
+    如果使用变量来接收find（）的返回值时则不会自动迭代20次，而是需要我们手动迭代它，另外还可以随意增加一个游标修饰符来进行限制、跳过以及排序。除非你声明一个方法 sort() ，否则不会定义查询返回的文档顺序。下面看例子：
+    ```bash
+    # 先插入20条文档
+    > for(var i = 0; i < 20; i++){ db.users.insert( { name: "abc" + i,  age: i, gender: i%2 === 0 ? "M" : "F" })}
+    WriteResult({ "nInserted" : 1 })
+
+    #查看现在表中的文档，find（）条件为空时返回所有的文档
+    > db.users.find()
+    { "_id" : ObjectId("5ac640d9467aab383136cb22"), "name" : "abc0", "age" : 0, "gender" : "M" }
+    { "_id" : ObjectId("5ac640d9467aab383136cb23"), "name" : "abc1", "age" : 1, "gender" : "F" }
+    { "_id" : ObjectId("5ac640d9467aab383136cb24"), "name" : "abc2", "age" : 2, "gender" : "M" }
+    ............
+    (数量太多就不全列出来了)
+    { "_id" : ObjectId("5ac640d9467aab383136cb33"), "name" : "abc17", "age" : 17, "gender" : "F" }
+    { "_id" : ObjectId("5ac640d9467aab383136cb34"), "name" : "abc18", "age" : 18, "gender" : "M" }
+    { "_id" : ObjectId("5ac640d9467aab383136cb35"), "name" : "abc19", "age" : 19, "gender" : "F" }
+    #加上限制条件，只查看gender为F的用户
+    > db.users.find({gender:'F'})
+    { "_id" : ObjectId("5ac640d9467aab383136cb23"), "name" : "abc1", "age" : 1, "gender" : "F" }
+    { "_id" : ObjectId("5ac640d9467aab383136cb25"), "name" : "abc3", "age" : 3, "gender" : "F" }
+    ............
+    (数量太多就不全列出来了)
+    { "_id" : ObjectId("5ac640d9467aab383136cb33"), "name" : "abc17", "age" : 17, "gender" : "F" }
+    { "_id" : ObjectId("5ac640d9467aab383136cb35"), "name" : "abc19", "age" : 19, "gender" : "F" }
+
+    # 如果我只需要年龄和姓名，不需要其他的字段，那么利用映射字段，去掉不需要的显示的数据
+    > db.users.find({gender:'F'},{_id:0,name:1,age:1})
+    { "name" : "abc1", "age" : 1 }
+    { "name" : "abc3", "age" : 3 }
+    { "name" : "abc5", "age" : 5 }
+    { "name" : "abc7", "age" : 7 }
+    { "name" : "abc9", "age" : 9 }
+    { "name" : "abc11", "age" : 11 }
+    { "name" : "abc13", "age" : 13 }
+    { "name" : "abc15", "age" : 15 }
+    { "name" : "abc17", "age" : 17 }
+    { "name" : "abc19", "age" : 19 }
+    # 很好现在只显示了我们需要的两个字段了
+
+    #如果只需要前三个呢,加上limit()方法
+    > db.users.find({gender:'F'},{_id:0,name:1,age:1}).limit(3)
+    { "name" : "abc1", "age" : 1 }
+    { "name" : "abc3", "age" : 3 }
+    { "name" : "abc5", "age" : 5 }
+    # 如果不需要前五个呢？使用skip()方法
+    > db.users.find({gender:'F'},{_id:0,name:1,age:1}).skip(5)
+    { "name" : "abc11", "age" : 11 }
+    { "name" : "abc13", "age" : 13 }
+    { "name" : "abc15", "age" : 15 }
+    { "name" : "abc17", "age" : 17 }
+    { "name" : "abc19", "age" : 19 }
+    #如果想要按照age逆序排列显示呢？使用sort方法，参数为{age：-1}，-1为逆序1为正序，可设置多个
+    > db.users.find({gender:'F'},{_id:0,name:1,age:1}).sort({age: -1})
+    { "name" : "abc19", "age" : 19 }
+    { "name" : "abc17", "age" : 17 }
+    { "name" : "abc15", "age" : 15 }
+    { "name" : "abc13", "age" : 13 }
+    { "name" : "abc11", "age" : 11 }
+    { "name" : "abc9", "age" : 9 }
+    { "name" : "abc7", "age" : 7 }
+    { "name" : "abc5", "age" : 5 }
+    { "name" : "abc3", "age" : 3 }
+    { "name" : "abc1", "age" : 1 }
+
+    #现在来了更加复杂的需求，需要年龄逆序时的3-5名这三个怎么办？综合利用上面三个方法，他们是可以链式调用的。
+    > db.users.find({gender:'F'},{_id:0,name:1,age:1}).sort({age: -1}).skip(2).limit(3)
+    { "name" : "abc15", "age" : 15 }
+    { "name" : "abc13", "age" : 13 }
+    { "name" : "abc11", "age" : 11 }
+
+    ```
+    好了现在我们已经初步掌握了，find（)的用法了。需要注意的是**不管sort()、skip()、limit()三个方法的调用顺序如何他们的执行顺序始终是sort()->skip()->limit()**如果有特殊调用顺序的需要，那么就要用到了**聚合管道**来配合使用。
+    
+    接下来看一下游标是如何使用的：
+    ```bash
+    # 使用while循环
+    > var cur = db.users.find({gender:'F'},{_id:0,name:1,age:1})
+    > while(cur.hasNext())  #判断cur后面是否还有文档，有则返回true
+    {
+        printjson(cur.next());  #打印
+    }
+    { "name" : "abc1", "age" : 1 }
+    { "name" : "abc3", "age" : 3 }
+    { "name" : "abc5", "age" : 5 }
+    { "name" : "abc7", "age" : 7 }
+    { "name" : "abc9", "age" : 9 }
+    { "name" : "abc11", "age" : 11 }
+    { "name" : "abc13", "age" : 13 }
+    { "name" : "abc15", "age" : 15 }
+    { "name" : "abc17", "age" : 17 }
+    { "name" : "abc19", "age" : 19 }
+
+    #使用forEach
+    > var cur = db.users.find({gender:'F'},{_id:0,name:1,age:1}) #因为上一次的走到头了，需要重新获取游标
+    > cur.forEach(printjson)  #使用forEach方法迭代输出游标指向的内容
+    { "name" : "abc1", "age" : 1 }
+    { "name" : "abc3", "age" : 3 }
+    { "name" : "abc5", "age" : 5 }
+    { "name" : "abc7", "age" : 7 }
+    { "name" : "abc9", "age" : 9 }
+    { "name" : "abc11", "age" : 11 }
+    { "name" : "abc13", "age" : 13 }
+    { "name" : "abc15", "age" : 15 }
+    { "name" : "abc17", "age" : 17 }
+    { "name" : "abc19", "age" : 19 }
+    ```
++ 更新文档
+
+    MongoDB提供如下方法更新集合中的文档:
+    |方法|功能|
+    |:--|:--|
+    |db.collection.updateOne()	|即使可能有多个文档通过过滤条件匹配到，但是也最多也只更新一个文档。<br>3.2 新版功能.|
+    |db.collection.updateMany()	|更新所有通过过滤条件匹配到的文档.<br>3.2 新版功能|
+    |db.collection.replaceOne()	|即使可能有多个文档通过过滤条件匹配到，但是也最多也只替换一个文档。<br>3.2 新版功能.|
+    |db.collection.update()	|即使可能有多个文档通过过滤条件匹配到，但是也最多也只更新或者替换一个文档。<br>默认情况下, db.collection.update() 只更新 一个 文档。要更新多个文档，请使用 multi 选项。|
+
+    update()方法的过滤条件和find()方法的过滤条件用法相同，第二个参数为需要更新的参数，看例子：
+    ```bash
+    #现在我们吧所有的女性年龄改为18，使用 $currentDate 操作符更新 data 字段的值到当前日期（如果没有这个字段则会创建它）
+    > db.users.update({gender: 'F'},{$set:{age:18}, $currentDate: { data: true } })
+    WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+    # 查询发现只有第一条文档被修改了，那是因为我们没有用multi选项
+    > db.users.find({gender:'F'},{_id: 0, name: 1, age: 1, data: 1})
+    { "name" : "abc1", "age" : 18, "data" : ISODate("2018-04-05T16:22:11.122Z") }
+    { "name" : "abc3", "age" : 3 }
+
+    ......
+
+    { "name" : "abc17", "age" : 17 }
+    { "name" : "abc19", "age" : 19 }
+    #加上multi选项试试，发现全部都被更新了，或者使用updateMany()可以达到相同的效果。
+    > db.users.update({gender: 'F'},{$set:{age:18}, $currentDate: { data: true } }, { multi: true})
+    WriteResult({ "nMatched" : 10, "nUpserted" : 0, "nModified" : 10 })
+    > db.users.find({gender:'F'},{_id: 0, name: 1, age: 1, data: 1})
+    { "name" : "abc1", "age" : 18, "data" : ISODate("2018-04-05T16:25:36.394Z") }
+    { "name" : "abc3", "age" : 18, "data" : ISODate("2018-04-05T16:25:36.394Z") }
+
+    .....
+
+
+    { "name" : "abc19", "age" : 18, "data" : ISODate("2018-04-05T16:25:36.394Z") }
+
+    ```
+    更新操作符有下面几种：
+    |操作符|作用|
+    |:--|:--|
+    |$inc	|按指定的量增加字段的值。|
+    |$mul	|将字段的值乘以指定的数量。|
+    |$rename	|重命名一个字段。|
+    |$setOnInsert	|如果更新导致插入文档，则设置字段的值。对修改现有文档的更新操作没有影响。|
+    |$set	|设置文档中字段的值。|
+    |$unset	|从文档中删除指定的字段。|
+    |$min	|如果指定的值小于现有字段值，则仅更新该字段。|
+    |$max	|如果指定的值大于现有字段值，则仅更新该字段。|
+    |$currentDate	|将字段的值设置为当前日期，可以是日期或时间戳。|
+
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
+```
