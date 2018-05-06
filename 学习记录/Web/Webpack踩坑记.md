@@ -190,7 +190,7 @@ src目录新建app.san文件，内容如下(其实就是官方`hello world`的�
     }
 </style>
 ```
-在入口文件中引入（也就是在index.js写上下面的代码）：
+在入口文件中引入（也就是在~~index.js~~ **main.js**写上下面的代码）：
 ```js
 import san from 'san';
 import {router} from 'san-router';
@@ -203,6 +203,7 @@ router.add({rule: '/', Component: San, target: '#app'});
 
 // 一定要记得启动
 router.start()
+
 ```
 
 ### 接下来我们尝试构建一下：
@@ -264,8 +265,12 @@ warning " > san-loader@0.0.7" has unmet peer dependency "css-loader@*".
 
 夜已深，不知不觉写到了两点半，写到这里我又梳理了一次自己的思路，按照我所踩坑的写下了这篇文章，当然自己扣的时候远没有写下的步骤这般顺利。感谢你能看到最后，这是我自己对于一天的踩坑的梳理，也希望记下来能帮助到你。当然这只是webpack的冰山一角，但是希望我的文章能帮助到你，相信你接下来可以自己看着文档学会。
 
+附上[GitHub](https://github.com/xluos/ife)
+
 如果我的文章帮到了你请给我评论或点赞
 
 如果还有什么疑问可以加我的QQ群一块交流【770474102】
+
+同时感谢下面的朋友指出我的错误
 
 
